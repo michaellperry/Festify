@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Festify.Promotion.DataAccess.Entities;
 using Festify.Promotion.Projections;
-using Festify.Promotion.Services.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Festify.Promotion.Services
+namespace Festify.Promotion.DataAccess
 {
     public class ShowQueries
     {
@@ -17,7 +17,7 @@ namespace Festify.Promotion.Services
             this.repository = repository;
         }
 
-        public async Task<List<ShowProjection>> GetAllShows()
+        public async Task<List<ShowProjection>> ListShows()
         {
             return await repository.Shows
                 .Select(show => new ShowProjection

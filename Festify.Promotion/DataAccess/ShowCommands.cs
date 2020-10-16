@@ -1,8 +1,8 @@
-﻿using Festify.Promotion.Services.Entities;
+﻿using Festify.Promotion.DataAccess.Entities;
 using System;
 using System.Threading.Tasks;
 
-namespace Festify.Promotion.Services
+namespace Festify.Promotion.DataAccess
 {
     public class ShowCommands
     {

@@ -3,11 +3,11 @@ using Xunit;
 using FluentAssertions;
 using System.Collections.Generic;
 using Festify.Promotion.Projections;
-using Festify.Promotion.Services;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.InMemory;
-using Festify.Promotion.Services.Entities;
 using Microsoft.EntityFrameworkCore;
+using Festify.Promotion.DataAccess;
+using Festify.Promotion.DataAccess.Entities;
 
 namespace Festify.Promotion.Test
 {
@@ -16,7 +16,7 @@ namespace Festify.Promotion.Test
         [Fact]
         public async Task ShowsInitiallyEmpty()
         {
-            List<ShowProjection> shows = await showQueries.GetAllShows();
+            List<ShowProjection> shows = await showQueries.ListShows();
             shows.Should().BeEmpty();
         }
 
@@ -26,7 +26,7 @@ namespace Festify.Promotion.Test
             var showGuid = Guid.NewGuid();
             await showCommands.AddShow(showGuid);
 
-            var shows = await showQueries.GetAllShows();
+            var shows = await showQueries.ListShows();
             shows.Should().Contain(show => show.ShowGuid == showGuid);
         }
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Festify.Promotion
+namespace Festify.Promotion.DataAccess.Entities
 {
     public class Show
     {

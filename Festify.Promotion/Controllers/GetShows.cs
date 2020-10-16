@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Festify.Promotion.Services;
+using Festify.Promotion.DataAccess;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Festify.Promotion.Controllers
@@ -21,7 +21,7 @@ namespace Festify.Promotion.Controllers
         {
             try
             {
-                var result = await showQueries.GetAllShows();
+                var result = await showQueries.ListShows();
                 return base.Ok(result);
             }
             catch (Exception ex)

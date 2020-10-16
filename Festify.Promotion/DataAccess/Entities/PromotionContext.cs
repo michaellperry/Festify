@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Festify.Promotion.Services.Entities
+namespace Festify.Promotion.DataAccess.Entities
 {
     public class PromotionContext : DbContext
     {
