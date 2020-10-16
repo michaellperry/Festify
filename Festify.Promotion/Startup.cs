@@ -21,7 +21,7 @@ namespace Festify.Promotion
         {
             services.AddControllers();
 
-            services.AddScoped<ShowsService>();
+            services.AddScoped<ShowQueries>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -8,11 +8,11 @@ namespace Festify.Promotion.Controllers
     [ApiController]
     public class GetShows : Controller
     {
-        private ShowsService showsService;
+        private ShowQueries showQueries;
 
-        public GetShows(ShowsService showsService)
+        public GetShows(ShowQueries showsService)
         {
-            this.showsService = showsService;
+            this.showQueries = showsService;
         }
 
         [HttpGet]
@@ -21,7 +21,7 @@ namespace Festify.Promotion.Controllers
         {
             try
             {
-                var result = await showsService.GetAllShows();
+                var result = await showQueries.GetAllShows();
                 return base.Ok(result);
             }
             catch (Exception ex)

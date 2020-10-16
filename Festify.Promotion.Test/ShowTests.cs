@@ -8,20 +8,20 @@ using System.Threading.Tasks;
 
 namespace Festify.Promotion.Test
 {
-    public class ShowsServiceTests
+    public class ShowTests
     {
         [Fact]
         public async Task ShowsInitiallyEmpty()
         {
-            List<ShowProjection> shows = await showsService.GetAllShows();
+            List<ShowProjection> shows = await showQueries.GetAllShows();
             shows.Should().BeEmpty();
         }
 
-        private ShowsService showsService;
+        private ShowQueries showQueries;
 
-        public ShowsServiceTests()
+        public ShowTests()
         {
-            showsService = new ShowsService();
+            showQueries = new ShowQueries();
         }
     }
 }
