@@ -1,0 +1,21 @@
+﻿@page
+@model Festify.Promotion.Pages.IndexModel
+@{
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Festify Promotion System</title>
+</head>
+<body>
+    <h1>Festify Promotion System</h1>
+
+    <ul>
+        @foreach (var show in Model.Shows)
+        {
+            <li>@show.ShowGuid</li>
+        }
+    </ul>
+</body>
+</html>

@@ -28,6 +28,7 @@ namespace Festify.Promotion
             });
 
             services.AddControllers();
+            services.AddRazorPages();
 
             services.AddScoped<ShowQueries>();
         }
@@ -49,6 +50,7 @@ namespace Festify.Promotion
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapRazorPages();
             });
         }
     }
