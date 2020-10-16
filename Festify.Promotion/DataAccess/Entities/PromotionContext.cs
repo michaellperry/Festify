@@ -8,6 +8,12 @@ namespace Festify.Promotion.DataAccess.Entities
         {
         }
 
-        public DbSet<Show> Shows { get; set; }
+        public DbSet<Show> Show { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Show>()
+                .HasAlternateKey(show => new { show.ShowGuid });
+        }
     }
 }

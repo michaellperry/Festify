@@ -19,7 +19,7 @@ namespace Festify.Promotion.DataAccess
 
         public async Task<List<ShowProjection>> ListShows()
         {
-            return await repository.Shows
+            return await repository.Show
                 .Select(show => new ShowProjection
                 {
                     ShowGuid = show.ShowGuid
