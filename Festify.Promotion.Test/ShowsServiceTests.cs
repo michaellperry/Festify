@@ -4,15 +4,16 @@ using FluentAssertions;
 using System.Collections.Generic;
 using Festify.Promotion.Projections;
 using Festify.Promotion.Services;
+using System.Threading.Tasks;
 
 namespace Festify.Promotion.Test
 {
     public class ShowsServiceTests
     {
         [Fact]
-        public void ShowsInitiallyEmpty()
+        public async Task ShowsInitiallyEmpty()
         {
-            List<ShowProjection> shows = showsService.GetAllShows();
+            List<ShowProjection> shows = await showsService.GetAllShows();
             shows.Should().BeEmpty();
         }
 

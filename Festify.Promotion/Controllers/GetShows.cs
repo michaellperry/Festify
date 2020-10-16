@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Festify.Promotion.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,11 +17,12 @@ namespace Festify.Promotion.Controllers
 
         [HttpGet]
         [Route("shows")]
-        public IActionResult Handle()
+        public async Task<IActionResult> Handle()
         {
             try
             {
-                return Ok(showsService.GetAllShows());
+                var result = await showsService.GetAllShows();
+                return base.Ok(result);
             }
             catch (Exception ex)
             {
