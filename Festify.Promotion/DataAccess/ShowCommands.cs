@@ -21,17 +21,18 @@ namespace Festify.Promotion.DataAccess
             await repository.SaveChangesAsync();
         }
 
-        public async Task SetShowDescription(Guid showGuid, ShowDescriptionModel showDescriptionProjection)
+        public async Task SetShowDescription(Guid showGuid, ShowDescriptionModel showDescriptionModel)
         {
             var show = await GetOrInsertShow(showGuid);
             await repository.AddAsync(new ShowDescription
             {
+                ModifiedDate = DateTime.UtcNow,
                 Show = show,
-                Title = showDescriptionProjection.Title,
-                Date = showDescriptionProjection.Date,
-                City = showDescriptionProjection.City,
-                Venue = showDescriptionProjection.Venue,
-                ImageHash = showDescriptionProjection.ImageHash
+                Title = showDescriptionModel.Title,
+                Date = showDescriptionModel.Date,
+                City = showDescriptionModel.City,
+                Venue = showDescriptionModel.Venue,
+                ImageHash = showDescriptionModel.ImageHash
             });
             await repository.SaveChangesAsync();
         }
