@@ -6,8 +6,8 @@ An example [Immutable Architecture](https://immutablearchitecture.com).
 
 Please install:
 
-* Dot Net Core
-* SQL Server Developer Edition
+* [Dot Net Core](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+* [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) Developer Edition
 
 ## Getting Started
 
@@ -29,6 +29,12 @@ The database will be created in your local SQL Server instance and be named `fes
 
 ```powershell
 dotnet ef database update --project .\Festify.Promotion\
+```
+
+If that fails because `dotnet-ef` does not exist, then you can install it with:
+
+```powershell
+dotnet tool install --global dotnet-ef
 ```
 
 Then to run the application:
