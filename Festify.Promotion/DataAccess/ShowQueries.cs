@@ -33,16 +33,21 @@ namespace Festify.Promotion.DataAccess
                 .Select(row => new ShowModel
                 {
                     ShowGuid = row.Show.ShowGuid,
-                    Description = row.Description == null ? null : new ShowDescriptionModel
-                    {
-                        Title = row.Description.Title,
-                        Date = row.Description.Date,
-                        City = row.Description.City,
-                        Venue = row.Description.Venue,
-                        ImageHash = row.Description.ImageHash
-                    }
+                    Description = MapShowDescription(row.Description)
                 })
                 .ToList();
+        }
+
+        private static ShowDescriptionModel MapShowDescription(ShowDescription showDescription)
+        {
+            return showDescription == null ? null : new ShowDescriptionModel
+            {
+                Title = showDescription.Title,
+                Date = showDescription.Date,
+                City = showDescription.City,
+                Venue = showDescription.Venue,
+                ImageHash = showDescription.ImageHash
+            };
         }
     }
 }
