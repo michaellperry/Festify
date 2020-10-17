@@ -1,5 +1,5 @@
 using Festify.Promotion.DataAccess;
-using Festify.Promotion.Projections;
+using Festify.Promotion.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ namespace Festify.Promotion.Pages
             this.showQueries = showQueries;
         }
 
-        public List<ShowProjection> Shows { get; set; }
+        public List<ShowModel> Shows { get; set; }
 
         public async Task OnGetAsync()
         {

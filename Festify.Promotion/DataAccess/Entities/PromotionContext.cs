@@ -14,6 +14,9 @@ namespace Festify.Promotion.DataAccess.Entities
         {
             modelBuilder.Entity<Show>()
                 .HasAlternateKey(show => new { show.ShowGuid });
+
+            modelBuilder.Entity<ShowDescription>()
+                .HasAlternateKey(showDescription => new { showDescription.ModifiedDate });
         }
     }
 }

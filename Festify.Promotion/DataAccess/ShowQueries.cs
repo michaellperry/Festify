@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Festify.Promotion.DataAccess.Entities;
-using Festify.Promotion.Projections;
+using Festify.Promotion.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Festify.Promotion.DataAccess
@@ -17,14 +17,32 @@ namespace Festify.Promotion.DataAccess
             this.repository = repository;
         }
 
-        public async Task<List<ShowProjection>> ListShows()
+        public async Task<List<ShowModel>> ListShows()
         {
-            return await repository.Show
-                .Select(show => new ShowProjection
+            var result = await repository.Show
+                .Select(show => new
                 {
-                    ShowGuid = show.ShowGuid
+                    Show = show,
+                    Description = show.Descriptions
+                        .OrderByDescending(d => d.ModifiedDate)
+                        .FirstOrDefault()
                 })
                 .ToListAsync();
+
+            return result
+                .Select(row => new ShowModel
+                {
+                    ShowGuid = row.Show.ShowGuid,
+                    Description = row.Description == null ? null : new ShowDescriptionModel
+                    {
+                        Title = row.Description.Title,
+                        Date = row.Description.Date,
+                        City = row.Description.City,
+                        Venue = row.Description.Venue,
+                        ImageHash = row.Description.ImageHash
+                    }
+                })
+                .ToList();
         }
     }
 }
