@@ -33,6 +33,17 @@ namespace Festify.Promotion.Test
         }
 
         [Fact]
+        public async Task WhenAddShowTwice_OneShowIsAdded()
+        {
+            var showGuid = Guid.NewGuid();
+            await showCommands.AddShow(showGuid);
+            await showCommands.AddShow(showGuid);
+
+            var shows = await showQueries.ListShows();
+            shows.Count.Should().Be(1);
+        }
+
+        [Fact]
         public async Task WhenSetShowDescription_ShowDescriptionIsReturned()
         {
             var random = new Random();

@@ -17,27 +17,13 @@ namespace Festify.Promotion.DataAccess
 
         public async Task AddShow(Guid showGuid)
         {
-            await repository.AddAsync(new Show
-            {
-                ShowGuid = showGuid
-            });
+            await GetOrInsertShow(showGuid);
             await repository.SaveChangesAsync();
         }
 
         public async Task SetShowDescription(Guid showGuid, ShowDescriptionModel showDescriptionProjection)
         {
-            var show = repository.Show
-                .Where(show => show.ShowGuid == showGuid)
-                .Single();
-                //.SingleOrDefault();
-            //if (show == null)
-            //{
-            //    show = new Show
-            //    {
-            //        ShowGuid = showGuid
-            //    };
-            //    await repository.AddAsync(show);
-            //}
+            var show = await GetOrInsertShow(showGuid);
             await repository.AddAsync(new ShowDescription
             {
                 Show = show,
@@ -48,6 +34,23 @@ namespace Festify.Promotion.DataAccess
                 ImageHash = showDescriptionProjection.ImageHash
             });
             await repository.SaveChangesAsync();
+        }
+
+        private async Task<Show> GetOrInsertShow(Guid showGuid)
+        {
+            var show = repository.Show
+                .Where(show => show.ShowGuid == showGuid)
+                .SingleOrDefault();
+            if (show == null)
+            {
+                show = new Show
+                {
+                    ShowGuid = showGuid
+                };
+                await repository.AddAsync(show);
+            }
+
+            return show;
         }
     }
 }
