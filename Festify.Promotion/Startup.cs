@@ -32,6 +32,8 @@ namespace Festify.Promotion
 
             services.AddScoped<ShowQueries>();
             services.AddScoped<ShowCommands>();
+            services.AddScoped<ContentQueries>();
+            services.AddScoped<ContentCommands>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

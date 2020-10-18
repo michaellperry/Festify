@@ -9,6 +9,7 @@ namespace Festify.Promotion.DataAccess.Entities
         }
 
         public DbSet<Show> Show { get; set; }
+        public DbSet<Content> Content { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -17,6 +18,12 @@ namespace Festify.Promotion.DataAccess.Entities
 
             modelBuilder.Entity<ShowDescription>()
                 .HasAlternateKey(showDescription => new { showDescription.ShowId, showDescription.ModifiedDate });
+
+            modelBuilder.Entity<Content>()
+                .HasKey(content => content.Hash);
+            modelBuilder.Entity<Content>()
+                .Property(content => content.Binary)
+                .IsRequired();
         }
     }
 }

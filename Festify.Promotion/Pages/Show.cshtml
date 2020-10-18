@@ -27,6 +27,7 @@
         <label for="Image">Image</label>
         <input class="form-control" asp-for="Image">
     </div>
+    <input type="hidden" asp-for="ImageHash" />
     <button type="submit" class="btn btn-primary">@(Model.AddShow ? "Add" : "Save")</button>
     <a class="btn btn-light" href="~/">Cancel</a>
 </form>
