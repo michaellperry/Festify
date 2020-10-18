@@ -1,21 +1,26 @@
 ﻿@page
 @model Festify.Promotion.Pages.IndexModel
 @{
+    Layout = "_Layout";
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Festify Promotion System</title>
-</head>
-<body>
-    <h1>Festify Promotion System</h1>
+<h1>Festify Promotion System</h1>
 
-    <ul>
-        @foreach (var show in Model.Shows)
+<div>
+    @foreach (var show in Model.Shows)
+    {
+        if (show.Description == null)
         {
-            <li>@show.ShowGuid</li>
+            <div>
+                <span>New Show</span>
+            </div>
         }
-    </ul>
-</body>
-</html>
+        else
+        {
+            <div>
+                <span>@show.Description.Title</span>
+                <span>@show.ShowGuid</span>
+            </div>
+        }
+    }
+</div>
