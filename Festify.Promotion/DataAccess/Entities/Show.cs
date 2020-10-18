@@ -10,5 +10,6 @@ namespace Festify.Promotion.DataAccess.Entities
         public Guid ShowGuid { get; set; }
 
         public ICollection<ShowDescription> Descriptions { get; set; } = new List<ShowDescription>();
+        public ICollection<ShowRemoved> Removed { get; set; } = new List<ShowRemoved>();
     }
 }

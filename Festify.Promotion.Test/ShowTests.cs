@@ -66,6 +66,28 @@ namespace Festify.Promotion.Test
             show.Description.Title.Should().Be("Jeff Dunham");
         }
 
+        [Fact]
+        public async Task GivenShowDoesNotExist_WhenSetShowDescription_SHowIsCreated()
+        {
+            var showGuid = Guid.NewGuid();
+            await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Gabriel Iglesias"));
+
+            var shows = await showQueries.ListShows();
+            var show = shows.Where(s => s.ShowGuid == showGuid).Single();
+            show.Description.Title.Should().Be("Gabriel Iglesias");
+        }
+
+        [Fact]
+        public async Task WhenRemoveShow_ShowIsNotReturned()
+        {
+            var showGuid = Guid.NewGuid();
+            await showCommands.AddShow(showGuid);
+            await showCommands.RemoveShow(showGuid);
+
+            var shows = await showQueries.ListShows();
+            shows.Should().BeEmpty();
+        }
+
         private static ShowDescriptionModel ShowDescriptionWith(string title)
         {
             var random = new Random();

@@ -20,6 +20,7 @@ namespace Festify.Promotion.DataAccess
         public async Task<List<ShowModel>> ListShows()
         {
             var result = await repository.Show
+                .Where(show => !show.Removed.Any())
                 .Select(show => new
                 {
                     Show = show,

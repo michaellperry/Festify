@@ -21,6 +21,17 @@ namespace Festify.Promotion.DataAccess
             await repository.SaveChangesAsync();
         }
 
+        public async Task RemoveShow(Guid showGuid)
+        {
+            var show = await GetOrInsertShow(showGuid);
+            await repository.AddAsync(new ShowRemoved
+            {
+                Show = show,
+                RemovedDate = DateTime.UtcNow
+            });
+            await repository.SaveChangesAsync();
+        }
+
         public async Task SetShowDescription(Guid showGuid, ShowDescriptionModel showDescriptionModel)
         {
             var show = await GetOrInsertShow(showGuid);
