@@ -40,7 +40,7 @@ dotnet tool install --global dotnet-ef
 Then to run the application:
 
 ```powershell
-dotnet run --project .\Festify.Promotion\
+dotnet watch run --project .\Festify.Promotion\
 ```
 
-Then you can hit the API at: [https://localhost:5001/shows](https://localhost:5001/shows).
+Then you browse to [https://localhost:5001].
