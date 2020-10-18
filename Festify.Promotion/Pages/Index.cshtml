@@ -7,7 +7,7 @@
 <h1>Festify Promotion System</h1>
 
 <div>
-    <a type="button" class="btn btn-primary" href="~/AddShow">Add Show</a>
+    <a type="button" class="btn btn-primary" href="~/AddShow/@Guid.NewGuid().ToString()">Add Show</a>
 
     @foreach (var show in Model.Shows)
     {
@@ -20,8 +20,7 @@
         else
         {
             <div>
-                <span>@show.Description.Title</span>
-                <span>@show.ShowGuid</span>
+                <span><a href="~/AddShow/@show.ShowGuid">@show.Description.Title</a></span>
             </div>
         }
     }

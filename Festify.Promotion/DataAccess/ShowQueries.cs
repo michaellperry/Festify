@@ -38,6 +38,26 @@ namespace Festify.Promotion.DataAccess
                 .ToList();
         }
 
+        public async Task<ShowModel> GetShow(Guid showGuid)
+        {
+            var result = await repository.Show
+                .Where(show => show.ShowGuid == showGuid)
+                .Select(show => new
+                {
+                    Show = show,
+                    Description = show.Descriptions
+                        .OrderByDescending(d => d.ModifiedDate)
+                        .FirstOrDefault()
+                })
+                .SingleOrDefaultAsync();
+
+            return result == null ? null : new ShowModel
+            {
+                ShowGuid = result.Show.ShowGuid,
+                Description = MapShowDescription(result.Description)
+            };
+        }
+
         private static ShowDescriptionModel MapShowDescription(ShowDescription showDescription)
         {
             return showDescription == null ? null : new ShowDescriptionModel
