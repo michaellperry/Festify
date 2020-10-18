@@ -24,6 +24,9 @@ namespace Festify.Promotion.DataAccess.Entities
             modelBuilder.Entity<Content>()
                 .Property(content => content.Binary)
                 .IsRequired();
+            modelBuilder.Entity<Content>()
+                .Property(content => content.ContentType)
+                .HasDefaultValue("image/jpg");
         }
     }
 }

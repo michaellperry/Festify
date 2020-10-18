@@ -14,13 +14,11 @@ namespace Festify.Promotion.DataAccess
             this.repository = repository;
         }
 
-        public async Task<byte[]> GetContent(string hash)
+        public async Task<Content> GetContent(string hash)
         {
-            var content = await repository.Content
+            return await repository.Content
                 .Where(c => c.Hash == hash)
                 .SingleOrDefaultAsync();
-
-            return content?.Binary;
         }
     }
 }

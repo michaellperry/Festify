@@ -1,5 +1,6 @@
 ﻿@page
 @model Festify.Promotion.Pages.IndexModel
+@using System.Web
 @{
     Layout = "_Layout";
 }
@@ -26,7 +27,7 @@
         else
         {
             <div class="card show-item">
-                <img src="~/images/Fluffy.jpg" class="card-img-top" alt="@show.Description.Title">
+                <img src="@Url.Content(show.Description.ImageHash == null ? "~/images/NoImage.jpg" : $"~/content/{Uri.EscapeDataString(show.Description.ImageHash)}")" class="card-img-top" alt="@show.Description.Title">
                 <div class="card-body">
                     <h5 class="card-title">@show.Description.Title</h5>
                     <p class="card-text">@show.Description.City</p>

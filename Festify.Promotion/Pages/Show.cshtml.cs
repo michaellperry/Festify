@@ -87,7 +87,7 @@ namespace Festify.Promotion.Pages
                 using var imageReadStream = Image.OpenReadStream();
                 using var imageMemoryStream = new MemoryStream();
                 await imageReadStream.CopyToAsync(imageMemoryStream);
-                var imageHash = await contentCommands.SaveContent(imageMemoryStream.ToArray());
+                var imageHash = await contentCommands.SaveContent(imageMemoryStream.ToArray(), Image.ContentType);
                 return imageHash;
             }
             else

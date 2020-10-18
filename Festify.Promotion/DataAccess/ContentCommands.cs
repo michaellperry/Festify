@@ -17,7 +17,7 @@ namespace Festify.Promotion.DataAccess
             this.repository = repository;
         }
 
-        public async Task<string> SaveContent(byte[] binary)
+        public async Task<string> SaveContent(byte[] binary, string contentType)
         {
             var sha512 = HashAlgorithm.Create(HashAlgorithmName.SHA512.Name);
             var hash = Convert.ToBase64String(sha512.ComputeHash(binary));
@@ -31,7 +31,8 @@ namespace Festify.Promotion.DataAccess
                 await repository.Content.AddAsync(new Content
                 {
                     Hash = hash,
-                    Binary = binary
+                    Binary = binary,
+                    ContentType = contentType
                 });
                 await repository.SaveChangesAsync();
             }
