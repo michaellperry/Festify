@@ -6,21 +6,36 @@
 
 <h1>Festify Promotion System</h1>
 
-<div>
-    <a type="button" class="btn btn-primary" href="~/AddShow/@Guid.NewGuid().ToString()">Add Show</a>
+<a type="button" class="btn btn-primary" href="~/AddShow/@Guid.NewGuid().ToString()">Add Show</a>
 
+<div class="d-flex show-container">
     @foreach (var show in Model.Shows)
     {
         if (show.Description == null)
         {
-            <div>
-                <span>New Show</span>
+            <div class="card show-item">
+                <img src="~/images/NewShow.jpg" class="card-img-top" alt="New Show">
+                <div class="card-body">
+                    <h5 class="card-title">New Show</h5>
+                </div>
+                <div class="card-footer">
+                    <a href="~/AddShow/@show.ShowGuid" class="btn btn-primary">Edit</a>
+                </div>
             </div>
         }
         else
         {
-            <div>
-                <span><a href="~/AddShow/@show.ShowGuid">@show.Description.Title</a></span>
+            <div class="card show-item">
+                <img src="~/images/Fluffy.jpg" class="card-img-top" alt="@show.Description.Title">
+                <div class="card-body">
+                    <h5 class="card-title">@show.Description.Title</h5>
+                    <p class="card-text">@show.Description.City</p>
+                    <p class="card-text">@show.Description.Venue</p>
+                    <p class="card-text">@show.Description.Date.ToShortDateString()</p>
+                </div>
+                <div class="card-footer">
+                    <a href="~/AddShow/@show.ShowGuid" class="btn btn-primary">Edit</a>
+                </div>
             </div>
         }
     }

@@ -5,3 +5,12 @@ body {
 input[type='file'] {
     border-style: none;
 }
+
+.show-container {
+    margin: 0.5em -0.5em;
+}
+
+.show-item {
+    width: 18rem;
+    margin: 0.5em;
+}
