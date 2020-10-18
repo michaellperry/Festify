@@ -15,7 +15,7 @@ namespace Festify.Promotion.Pages
             this.showQueries = showQueries;
         }
 
-        public List<ShowModel> Shows { get; set; }
+        public List<Models.ShowModel> Shows { get; set; }
 
         public async Task OnGetAsync()
         {

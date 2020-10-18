@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Festify.Promotion.Pages
 {
-    public class AddShowModel : PageModel
+    public class ShowModel : PageModel
     {
         private readonly ShowQueries queries;
         private readonly ShowCommands commands;
 
-        public AddShowModel(ShowQueries queries, ShowCommands commands)
+        public ShowModel(ShowQueries queries, ShowCommands commands)
         {
             this.queries = queries;
             this.commands = commands;
@@ -22,10 +22,12 @@ namespace Festify.Promotion.Pages
         [BindProperty(SupportsGet=true)]
         public Guid ShowGuid { get; set; }
 
+        public bool AddShow { get; set; }
+
         [BindProperty]
         public string Title { get; set; }
         [BindProperty]
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
         [BindProperty]
         public string City { get; set; }
         [BindProperty]
@@ -39,14 +41,18 @@ namespace Festify.Promotion.Pages
 
             if (show == null)
             {
-
+                AddShow = true;
             }
             else
             {
-                Title = show.Description.Title;
-                Date = show.Description.Date.ToLocalTime();
-                City = show.Description.City;
-                Venue = show.Description.Venue;
+                AddShow = false;
+                if (show.Description != null)
+                {
+                    Title = show.Description.Title;
+                    Date = show.Description.Date.ToLocalTime();
+                    City = show.Description.City;
+                    Venue = show.Description.Venue;
+                }
             }
         }
 

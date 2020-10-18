@@ -1,10 +1,10 @@
 ﻿@page "{ShowGuid}"
-@model Festify.Promotion.Pages.AddShowModel
+@model Festify.Promotion.Pages.ShowModel
 @{
     Layout = "_Layout";
 }
 
-<h1>Add Show</h1>
+<h1>@(Model.AddShow ? "Add Show" : "Edit Show")</h1>
 
 <form method="post" enctype="multipart/form-data">
     <div class="form-group">
@@ -27,5 +27,6 @@
         <label for="Image">Image</label>
         <input class="form-control" asp-for="Image">
     </div>
-    <button type="submit" class="btn btn-primary">Add</button>
+    <button type="submit" class="btn btn-primary">@(Model.AddShow ? "Add" : "Save")</button>
+    <a class="btn btn-light" href="~/">Cancel</a>
 </form>

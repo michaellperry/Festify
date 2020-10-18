@@ -6,7 +6,7 @@
 
 <h1>Festify Promotion System</h1>
 
-<a type="button" class="btn btn-primary" href="~/AddShow/@Guid.NewGuid().ToString()">Add Show</a>
+<a type="button" class="btn btn-primary" href="~/Show/@Guid.NewGuid().ToString()">Add Show</a>
 
 <div class="d-flex show-container">
     @foreach (var show in Model.Shows)
@@ -19,7 +19,7 @@
                     <h5 class="card-title">New Show</h5>
                 </div>
                 <div class="card-footer">
-                    <a href="~/AddShow/@show.ShowGuid" class="btn btn-primary">Edit</a>
+                    <a href="~/Show/@show.ShowGuid" class="btn btn-primary">Edit</a>
                 </div>
             </div>
         }
@@ -34,7 +34,7 @@
                     <p class="card-text">@show.Description.Date.ToShortDateString()</p>
                 </div>
                 <div class="card-footer">
-                    <a href="~/AddShow/@show.ShowGuid" class="btn btn-primary">Edit</a>
+                    <a href="~/Show/@show.ShowGuid" class="btn btn-primary">Edit</a>
                 </div>
             </div>
         }
