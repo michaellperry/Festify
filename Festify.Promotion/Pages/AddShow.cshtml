@@ -1,0 +1,33 @@
+﻿@page
+@model Festify.Promotion.Pages.AddShowModel
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@{
+    Layout = "_Layout";
+}
+
+<h1>Add Show</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label for="titleInput">Title</label>
+        <input type="text" class="form-control" name="title" id="titleInput">
+    </div>
+    <div class="form-group">
+        <label for="dateInput">Date</label>
+        <input type="datetime-local" class="form-control" name="date" id="dateInput">
+    </div>
+    <div class="form-group">
+        <label for="cityInput">City</label>
+        <input type="text" class="form-control" name="city" id="cityInput">
+    </div>
+    <div class="form-group">
+        <label for="venueInput">Venue</label>
+        <input type="text" class="form-control" name="venue" id="venueInput">
+    </div>
+    @*<div class="form-group">
+            <label for="imageInput">Image</label>
+            <input type="file" class="form-control" name="image" id="imageInput">
+        </div>*@
+    <input name="__RequestVerificationToken" type="hidden" value="@Xsrf.GetAndStoreTokens(this.HttpContext).RequestToken" />
+    <button type="submit" class="btn btn-primary">Add</button>
+</form>

@@ -31,6 +31,7 @@ namespace Festify.Promotion
             services.AddRazorPages();
 
             services.AddScoped<ShowQueries>();
+            services.AddScoped<ShowCommands>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

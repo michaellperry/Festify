@@ -1,15 +1,13 @@
-﻿using System;
-using Xunit;
-using FluentAssertions;
-using System.Collections.Generic;
-using Festify.Promotion.Models;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.InMemory;
-using Microsoft.EntityFrameworkCore;
-using Festify.Promotion.DataAccess;
+﻿using Festify.Promotion.DataAccess;
 using Festify.Promotion.DataAccess.Entities;
-using System.Reflection;
+using Festify.Promotion.Models;
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace Festify.Promotion.Test
 {
