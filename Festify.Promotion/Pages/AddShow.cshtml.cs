@@ -25,7 +25,7 @@ namespace Festify.Promotion.Pages
         [BindProperty]
         public string Title { get; set; }
         [BindProperty]
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
         [BindProperty]
         public string City { get; set; }
         [BindProperty]
@@ -44,7 +44,7 @@ namespace Festify.Promotion.Pages
             else
             {
                 Title = show.Description.Title;
-                Date = show.Description.Date.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
+                Date = show.Description.Date.ToLocalTime();
                 City = show.Description.City;
                 Venue = show.Description.Venue;
             }
@@ -52,10 +52,10 @@ namespace Festify.Promotion.Pages
 
         public async Task<IActionResult> OnPost()
         {
-            await commands.SetShowDescription(Guid.NewGuid(), new ShowDescriptionModel
+            await commands.SetShowDescription(ShowGuid, new ShowDescriptionModel
             {
                 Title = Title,
-                Date = DateTime.Parse(Date).ToUniversalTime(),
+                Date = Date.ToUniversalTime(),
                 City = City,
                 Venue = Venue,
                 ImageHash = "what"

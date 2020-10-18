@@ -1,6 +1,5 @@
 ﻿@page "{ShowGuid}"
 @model Festify.Promotion.Pages.AddShowModel
-@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
 @{
     Layout = "_Layout";
 }
@@ -28,6 +27,5 @@
         <label for="Image">Image</label>
         <input class="form-control" asp-for="Image">
     </div>
-    <input name="__RequestVerificationToken" type="hidden" value="@Xsrf.GetAndStoreTokens(this.HttpContext).RequestToken" />
     <button type="submit" class="btn btn-primary">Add</button>
 </form>
