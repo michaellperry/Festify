@@ -1,0 +1,37 @@
+﻿@page "{ShowGuid}"
+@model Festify.Promotion.Pages.ShowRemoveModel
+@{
+    Layout = "_Layout";
+}
+
+<h1>Remove Show</h1>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-8">
+            <p>This show will be removed. Please confirm.</p>
+
+            <h5>@Model.Title</h5>
+
+            <div>
+                <p>@Model.City</p>
+                <p>@Model.Venue</p>
+                <p>@Model.Date.ToShortDateString()</p>
+            </div>
+
+            <form method="post">
+                <div>
+                    <button type="submit" class="btn btn-danger">Remove</button>
+                    <a class="btn btn-light" href="~/">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-4">
+            @if (Model.ImageHash != null)
+            {
+                <img class="show-image" src="@Url.Content($"~/content/{Uri.EscapeDataString(Model.ImageHash)}")" alt="@Model.Title">
+            }
+        </div>
+    </div>
+</div>

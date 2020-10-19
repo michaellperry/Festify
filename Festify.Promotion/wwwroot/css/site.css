@@ -14,3 +14,7 @@ input[type='file'] {
     width: 18rem;
     margin: 0.5em;
 }
+
+.show-image {
+    max-width: 400px;
+}

@@ -6,28 +6,45 @@
 
 <h1>@(Model.AddShow ? "Add Show" : "Edit Show")</h1>
 
-<form method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label for="Title">Title</label>
-        <input class="form-control" asp-for="Title">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-8">
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="Title">Title</label>
+                    <input class="form-control" asp-for="Title">
+                </div>
+                <div class="form-group">
+                    <label for="Date">Date</label>
+                    <input class="form-control" asp-for="Date">
+                </div>
+                <div class="form-group">
+                    <label for="City">City</label>
+                    <input class="form-control" asp-for="City">
+                </div>
+                <div class="form-group">
+                    <label for="Venue">Venue</label>
+                    <input class="form-control" asp-for="Venue">
+                </div>
+                <div class="form-group">
+                    <label for="Image">Image</label>
+                    <input class="form-control" asp-for="Image">
+                </div>
+                <input type="hidden" asp-for="ImageHash" />
+                <button type="submit" class="btn btn-primary">@(Model.AddShow ? "Add" : "Save")</button>
+                @if (!Model.AddShow)
+                {
+                    <a class="btn btn-danger" href="~/ShowRemove/@Model.ShowGuid">Remove</a>
+                }
+                <a class="btn btn-light" href="~/">Cancel</a>
+            </form>
+        </div>
+
+        <div class="col-4">
+            @if (Model.ImageHash != null)
+            {
+                <img class="show-image" src="@Url.Content($"~/content/{Uri.EscapeDataString(Model.ImageHash)}")" alt="@Model.Title">
+            }
+        </div>
     </div>
-    <div class="form-group">
-        <label for="Date">Date</label>
-        <input class="form-control" asp-for="Date">
-    </div>
-    <div class="form-group">
-        <label for="City">City</label>
-        <input class="form-control" asp-for="City">
-    </div>
-    <div class="form-group">
-        <label for="Venue">Venue</label>
-        <input class="form-control" asp-for="Venue">
-    </div>
-    <div class="form-group">
-        <label for="Image">Image</label>
-        <input class="form-control" asp-for="Image">
-    </div>
-    <input type="hidden" asp-for="ImageHash" />
-    <button type="submit" class="btn btn-primary">@(Model.AddShow ? "Add" : "Save")</button>
-    <a class="btn btn-light" href="~/">Cancel</a>
-</form>
+</div>
