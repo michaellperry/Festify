@@ -4,10 +4,10 @@ LEFT JOIN (
     SELECT [t].[ShowId], [t].[Title], [t].[ModifiedDate]
     FROM (
         SELECT [s0].[ModifiedDate], [s0].[ShowId], [s0].[Title],
-		    ROW_NUMBER() OVER(
-			    PARTITION BY [s0].[ShowId]
-				ORDER BY [s0].[ModifiedDate] DESC)
-			AS [row]
+            ROW_NUMBER() OVER(
+                PARTITION BY [s0].[ShowId]
+                ORDER BY [s0].[ModifiedDate] DESC)
+            AS [row]
         FROM [ShowDescription] AS [s0]
     ) AS [t]
     WHERE [t].[row] <= 1

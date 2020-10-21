@@ -31,6 +31,7 @@
                     <input class="form-control" asp-for="Image">
                 </div>
                 <input type="hidden" asp-for="ImageHash" />
+                <input type="hidden" asp-for="LastModifiedDate" />
                 <button type="submit" class="btn btn-primary">@(Model.AddShow ? "Add" : "Save")</button>
                 @if (!Model.AddShow)
                 {
@@ -38,6 +39,12 @@
                 }
                 <a class="btn btn-light" href="~/">Cancel</a>
             </form>
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger" role="alert">
+                    @Model.ErrorMessage
+                </div>
+            }
         </div>
 
         <div class="col-4">

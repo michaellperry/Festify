@@ -1,3 +1,4 @@
+using System.Data;
 using Festify.Promotion.DataAccess;
 using Festify.Promotion.Models;
 using Microsoft.AspNetCore.Http;
@@ -41,6 +42,9 @@ namespace Festify.Promotion.Pages
         public IFormFile Image { get; set; }
         [BindProperty]
         public string ImageHash { get; set; }
+        [BindProperty]
+        public DateTime? LastModifiedDate { get; set; }
+        public string ErrorMessage { get; set; }
 
         public async Task OnGet()
         {
@@ -60,6 +64,7 @@ namespace Festify.Promotion.Pages
                     City = show.Description.City;
                     Venue = show.Description.Venue;
                     ImageHash = show.Description.ImageHash;
+                    LastModifiedDate = show.Description.LastModifiedDate;
                 }
             }
         }
@@ -68,14 +73,23 @@ namespace Festify.Promotion.Pages
         {
             var imageHash = await GetImageHash();
 
-            await showCommands.SetShowDescription(ShowGuid, new ShowDescriptionModel
+            try
             {
-                Title = Title,
-                Date = Date.ToUniversalTime(),
-                City = City,
-                Venue = Venue,
-                ImageHash = imageHash
-            });
+                await showCommands.SetShowDescription(ShowGuid, new ShowDescriptionModel
+                {
+                    Title = Title,
+                    Date = Date.ToUniversalTime(),
+                    City = City,
+                    Venue = Venue,
+                    ImageHash = imageHash,
+                    LastModifiedDate = LastModifiedDate
+                });
+            }
+            catch (DBConcurrencyException ex)
+            {
+                ErrorMessage = ex.Message;
+                return Page();
+            }
 
             return Redirect("~/");
         }
