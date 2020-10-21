@@ -45,17 +45,25 @@ namespace Festify.Promotion.DataAccess
                 throw new DbUpdateConcurrencyException("A new update has occurred since you loaded the page. Please refresh and try again.");
             }
 
-            await repository.AddAsync(new ShowDescription
+            if (lastShowDescription == null ||
+                lastShowDescription.Title != showDescriptionModel.Title ||
+                lastShowDescription.Date != showDescriptionModel.Date ||
+                lastShowDescription.City != showDescriptionModel.City ||
+                lastShowDescription.Venue != showDescriptionModel.Venue ||
+                lastShowDescription.ImageHash != showDescriptionModel.ImageHash)
             {
-                ModifiedDate = DateTime.UtcNow,
-                Show = show,
-                Title = showDescriptionModel.Title,
-                Date = showDescriptionModel.Date,
-                City = showDescriptionModel.City,
-                Venue = showDescriptionModel.Venue,
-                ImageHash = showDescriptionModel.ImageHash
-            });
-            await repository.SaveChangesAsync();
+                await repository.AddAsync(new ShowDescription
+                {
+                    ModifiedDate = DateTime.UtcNow,
+                    Show = show,
+                    Title = showDescriptionModel.Title,
+                    Date = showDescriptionModel.Date,
+                    City = showDescriptionModel.City,
+                    Venue = showDescriptionModel.Venue,
+                    ImageHash = showDescriptionModel.ImageHash
+                });
+                await repository.SaveChangesAsync();
+            }
         }
 
         private long ToTicks(DateTime? optionalDate)

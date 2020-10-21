@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -68,6 +70,20 @@ namespace Festify.Promotion.Test
         }
 
         [Fact]
+        public async Task WhenShowDescriptionIsTheSame_ShowDescriptionIsNotModified()
+        {
+            var showGuid = Guid.NewGuid();
+            await showCommands.AddShow(showGuid);
+            await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Gabriel Iglesias"));
+            var versionOne = await showQueries.GetShow(showGuid);
+            await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Gabriel Iglesias", versionOne.Description.LastModifiedTicks));
+
+            var shows = await showQueries.ListShows();
+            var show = shows.Where(s => s.ShowGuid == showGuid).Single();
+            show.Description.LastModifiedTicks.Should().Be(versionOne.Description.LastModifiedTicks);
+        }
+
+        [Fact]
         public async Task WhenBasedOnOldVersion_ChangeIsRejected()
         {
             var showGuid = Guid.NewGuid();
@@ -83,7 +99,7 @@ namespace Festify.Promotion.Test
         }
 
         [Fact]
-        public async Task GivenShowDoesNotExist_WhenSetShowDescription_SHowIsCreated()
+        public async Task GivenShowDoesNotExist_WhenSetShowDescription_ShowIsCreated()
         {
             var showGuid = Guid.NewGuid();
             await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Gabriel Iglesias"));
@@ -106,9 +122,8 @@ namespace Festify.Promotion.Test
 
         private static ShowDescriptionModel ShowDescriptionWith(string title, long lastModifiedTicks = 0)
         {
-            var random = new Random();
-            var imageHash = new byte[512 / 8];
-            random.NextBytes(imageHash);
+            var sha512 = HashAlgorithm.Create(HashAlgorithmName.SHA512.Name);
+            var imageHash = sha512.ComputeHash(Encoding.UTF8.GetBytes(title));
 
             ShowDescriptionModel showDescription = new ShowDescriptionModel
             {
