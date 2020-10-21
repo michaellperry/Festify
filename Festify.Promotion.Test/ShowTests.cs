@@ -50,8 +50,7 @@ namespace Festify.Promotion.Test
             await showCommands.AddShow(showGuid);
             await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Gabriel Iglesias"));
 
-            var shows = await showQueries.ListShows();
-            var show = shows.Where(s => s.ShowGuid == showGuid).Single();
+            var show = await showQueries.GetShow(showGuid);
             show.Description.Title.Should().Be("Gabriel Iglesias");
         }
 
@@ -64,8 +63,7 @@ namespace Festify.Promotion.Test
             var versionOne = await showQueries.GetShow(showGuid);
             await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Jeff Dunham", versionOne.Description.LastModifiedTicks));
 
-            var shows = await showQueries.ListShows();
-            var show = shows.Where(s => s.ShowGuid == showGuid).Single();
+            var show = await showQueries.GetShow(showGuid);
             show.Description.Title.Should().Be("Jeff Dunham");
         }
 
@@ -78,8 +76,7 @@ namespace Festify.Promotion.Test
             var versionOne = await showQueries.GetShow(showGuid);
             await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Gabriel Iglesias", versionOne.Description.LastModifiedTicks));
 
-            var shows = await showQueries.ListShows();
-            var show = shows.Where(s => s.ShowGuid == showGuid).Single();
+            var show = await showQueries.GetShow(showGuid);
             show.Description.LastModifiedTicks.Should().Be(versionOne.Description.LastModifiedTicks);
         }
 
@@ -104,8 +101,7 @@ namespace Festify.Promotion.Test
             var showGuid = Guid.NewGuid();
             await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Gabriel Iglesias"));
 
-            var shows = await showQueries.ListShows();
-            var show = shows.Where(s => s.ShowGuid == showGuid).Single();
+            var show = await showQueries.GetShow(showGuid);
             show.Description.Title.Should().Be("Gabriel Iglesias");
         }
 
