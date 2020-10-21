@@ -60,7 +60,7 @@ namespace Festify.Promotion.Test
             await showCommands.AddShow(showGuid);
             await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Gabriel Iglesias"));
             var versionOne = await showQueries.GetShow(showGuid);
-            await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Jeff Dunham", versionOne.Description.LastModifiedDate));
+            await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Jeff Dunham", versionOne.Description.LastModifiedTicks));
 
             var shows = await showQueries.ListShows();
             var show = shows.Where(s => s.ShowGuid == showGuid).Single();
@@ -73,11 +73,11 @@ namespace Festify.Promotion.Test
             var showGuid = Guid.NewGuid();
             await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Gabriel Iglesias"));
             var versionOne = await showQueries.GetShow(showGuid);
-            await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Jeff Dunham", versionOne.Description.LastModifiedDate));
+            await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Jeff Dunham", versionOne.Description.LastModifiedTicks));
             
             Func<Task> update = async () =>
             {
-                await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Jeff Foxworthy", versionOne.Description.LastModifiedDate));
+                await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Jeff Foxworthy", versionOne.Description.LastModifiedTicks));
             };
             update.Should().Throw<DbUpdateConcurrencyException>();
         }
@@ -104,7 +104,7 @@ namespace Festify.Promotion.Test
             shows.Should().BeEmpty();
         }
 
-        private static ShowDescriptionModel ShowDescriptionWith(string title, DateTime? lastModifiedDate = null)
+        private static ShowDescriptionModel ShowDescriptionWith(string title, long lastModifiedTicks = 0)
         {
             var random = new Random();
             var imageHash = new byte[512 / 8];
@@ -117,7 +117,7 @@ namespace Festify.Promotion.Test
                 City = "Durant, OK",
                 Venue = "Choctaw Grand Theater",
                 ImageHash = Convert.ToBase64String(imageHash),
-                LastModifiedDate = lastModifiedDate
+                LastModifiedTicks = lastModifiedTicks
             };
             return showDescription;
         }

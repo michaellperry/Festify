@@ -31,7 +31,7 @@
                     <input class="form-control" asp-for="Image">
                 </div>
                 <input type="hidden" asp-for="ImageHash" />
-                <input type="hidden" asp-for="LastModifiedDate" />
+                <input type="hidden" asp-for="LastModifiedTicks" />
                 <button type="submit" class="btn btn-primary">@(Model.AddShow ? "Add" : "Save")</button>
                 @if (!Model.AddShow)
                 {

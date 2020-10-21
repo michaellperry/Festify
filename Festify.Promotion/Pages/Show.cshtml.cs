@@ -1,9 +1,9 @@
-using System.Data;
 using Festify.Promotion.DataAccess;
 using Festify.Promotion.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -43,7 +43,7 @@ namespace Festify.Promotion.Pages
         [BindProperty]
         public string ImageHash { get; set; }
         [BindProperty]
-        public DateTime? LastModifiedDate { get; set; }
+        public long LastModifiedTicks { get; set; }
         public string ErrorMessage { get; set; }
 
         public async Task OnGet()
@@ -64,7 +64,7 @@ namespace Festify.Promotion.Pages
                     City = show.Description.City;
                     Venue = show.Description.Venue;
                     ImageHash = show.Description.ImageHash;
-                    LastModifiedDate = show.Description.LastModifiedDate;
+                    LastModifiedTicks = show.Description.LastModifiedTicks;
                 }
             }
         }
@@ -82,10 +82,10 @@ namespace Festify.Promotion.Pages
                     City = City,
                     Venue = Venue,
                     ImageHash = imageHash,
-                    LastModifiedDate = LastModifiedDate
+                    LastModifiedTicks = LastModifiedTicks
                 });
             }
-            catch (DBConcurrencyException ex)
+            catch (DbUpdateConcurrencyException ex)
             {
                 ErrorMessage = ex.Message;
                 return Page();

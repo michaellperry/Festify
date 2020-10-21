@@ -39,7 +39,8 @@ namespace Festify.Promotion.DataAccess
             var lastShowDescription = show.Descriptions
                 .OrderByDescending(description => description.ModifiedDate)
                 .FirstOrDefault();
-            if (lastShowDescription?.ModifiedDate != showDescriptionModel.LastModifiedDate)
+            var modifiedTicks = ToTicks(lastShowDescription?.ModifiedDate);
+            if (modifiedTicks != showDescriptionModel.LastModifiedTicks)
             {
                 throw new DbUpdateConcurrencyException("A new update has occurred since you loaded the page. Please refresh and try again.");
             }
@@ -55,6 +56,17 @@ namespace Festify.Promotion.DataAccess
                 ImageHash = showDescriptionModel.ImageHash
             });
             await repository.SaveChangesAsync();
+        }
+
+        private long ToTicks(DateTime? optionalDate)
+        {
+            switch (optionalDate)
+            {
+                case DateTime date:
+                    return date.Ticks;
+                case null:
+                    return 0;
+            }
         }
 
         private async Task<Show> GetOrInsertShow(Guid showGuid)

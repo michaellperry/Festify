@@ -68,7 +68,7 @@ namespace Festify.Promotion.DataAccess
                 City = showDescription.City,
                 Venue = showDescription.Venue,
                 ImageHash = showDescription.ImageHash,
-                LastModifiedDate = showDescription.ModifiedDate
+                LastModifiedTicks = showDescription.ModifiedDate.Ticks
             };
         }
     }
