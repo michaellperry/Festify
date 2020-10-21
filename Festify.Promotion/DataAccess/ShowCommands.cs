@@ -3,6 +3,7 @@ using Festify.Promotion.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Festify.Promotion.DataAccess
 {
@@ -35,6 +36,14 @@ namespace Festify.Promotion.DataAccess
         public async Task SetShowDescription(Guid showGuid, ShowDescriptionModel showDescriptionModel)
         {
             var show = await GetOrInsertShow(showGuid);
+            var lastShowDescription = show.Descriptions
+                .OrderByDescending(description => description.ModifiedDate)
+                .FirstOrDefault();
+            if (lastShowDescription?.ModifiedDate != showDescriptionModel.LastModifiedDate)
+            {
+                throw new DbUpdateConcurrencyException("A new update has occurred since you loaded the page. Please refresh and try again.");
+            }
+
             await repository.AddAsync(new ShowDescription
             {
                 ModifiedDate = DateTime.UtcNow,
@@ -51,6 +60,7 @@ namespace Festify.Promotion.DataAccess
         private async Task<Show> GetOrInsertShow(Guid showGuid)
         {
             var show = repository.Show
+                .Include(show => show.Descriptions)
                 .Where(show => show.ShowGuid == showGuid)
                 .SingleOrDefault();
             if (show == null)

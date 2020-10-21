@@ -9,5 +9,6 @@ namespace Festify.Promotion.Models
         public string City { get; set; }
         public string Venue { get; set; }
         public string ImageHash { get; set; }
+        public DateTime? LastModifiedDate { get; set; }
     }
 }

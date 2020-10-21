@@ -59,11 +59,27 @@ namespace Festify.Promotion.Test
             var showGuid = Guid.NewGuid();
             await showCommands.AddShow(showGuid);
             await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Gabriel Iglesias"));
-            await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Jeff Dunham"));
+            var versionOne = await showQueries.GetShow(showGuid);
+            await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Jeff Dunham", versionOne.Description.LastModifiedDate));
 
             var shows = await showQueries.ListShows();
             var show = shows.Where(s => s.ShowGuid == showGuid).Single();
             show.Description.Title.Should().Be("Jeff Dunham");
+        }
+
+        [Fact]
+        public async Task WhenBasedOnOldVersion_ChangeIsRejected()
+        {
+            var showGuid = Guid.NewGuid();
+            await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Gabriel Iglesias"));
+            var versionOne = await showQueries.GetShow(showGuid);
+            await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Jeff Dunham", versionOne.Description.LastModifiedDate));
+            
+            Func<Task> update = async () =>
+            {
+                await showCommands.SetShowDescription(showGuid, ShowDescriptionWith("Jeff Foxworthy", versionOne.Description.LastModifiedDate));
+            };
+            update.Should().Throw<DbUpdateConcurrencyException>();
         }
 
         [Fact]
@@ -88,7 +104,7 @@ namespace Festify.Promotion.Test
             shows.Should().BeEmpty();
         }
 
-        private static ShowDescriptionModel ShowDescriptionWith(string title)
+        private static ShowDescriptionModel ShowDescriptionWith(string title, DateTime? lastModifiedDate = null)
         {
             var random = new Random();
             var imageHash = new byte[512 / 8];
@@ -100,7 +116,8 @@ namespace Festify.Promotion.Test
                 Date = new DateTime(2021, 8, 29, 1, 0, 0, DateTimeKind.Utc),
                 City = "Durant, OK",
                 Venue = "Choctaw Grand Theater",
-                ImageHash = Convert.ToBase64String(imageHash)
+                ImageHash = Convert.ToBase64String(imageHash),
+                LastModifiedDate = lastModifiedDate
             };
             return showDescription;
         }
