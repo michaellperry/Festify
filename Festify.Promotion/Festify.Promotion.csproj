@@ -16,5 +16,9 @@
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Festify.Promotion.Messages\Festify.Promotion.Messages.csproj" />
+  </ItemGroup>
+
 
 </Project>
