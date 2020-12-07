@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Festify.Promotion.Acts.ActInfo>
+
+@{
+    ViewData["Title"] = "Acts";
+}
+
+<h1>Acts</h1>
+
+<p>
+    <a asp-action="Create">Create Act</a>
+</p>
+
+<div class="d-flex act-container">
+    @foreach (var act in Model)
+    {
+        <div class="card act-item">
+            <img src="@Url.Content(act.ImageHash == null ? "~/images/NoImage.jpg" : $"~/Content/{Uri.EscapeDataString(act.ImageHash)}")" class="card-img-top" alt="@act.Title">
+            <div class="card-body">
+                <h5 class="card-title">@act.Title</h5>
+            </div>
+            <div class="card-footer">
+                <a class="btn" asp-action="Edit" asp-route-id="@act.ActGuid">Edit</a> |
+                <a class="btn btn-primary" asp-action="Details" asp-route-id="@act.ActGuid">Details</a> |
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@act.ActGuid">Delete</a>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,71 @@
+﻿@model Festify.Promotion.Acts.ActViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Act</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Act.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Act.Title)
+        </dd>
+
+        <div class="col-4">
+            @if (Model.Act.ImageHash != null)
+            {
+                <img class="act-image" src="@Url.Content($"~/Content/{Uri.EscapeDataString(Model.Act.ImageHash)}")" alt="@Model.Act.Title">
+            }
+        </div>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Act.ActGuid">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<h4>Shows</h4>
+
+<p>
+    <a asp-controller="Shows" asp-action="Create" asp-route-id="@Model.Act.ActGuid">Create Show</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                City
+            </th>
+            <th>
+                Venue
+            </th>
+            <th>
+                Start Time
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Shows) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Venue.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Venue.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
+            <td>
+                <a href="~/Shows/Delete/@item.ActGuid/@item.Venue.VenueGuid/@item.StartTime.ToString("o")">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

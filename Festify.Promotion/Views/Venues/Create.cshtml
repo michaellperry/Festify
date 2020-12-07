@@ -1,0 +1,55 @@
+﻿@model Festify.Promotion.Venues.VenueViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Venue</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Venue.Name" class="control-label"></label>
+                <input asp-for="Venue.Name" class="form-control" />
+                <span asp-validation-for="Venue.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Venue.City" class="control-label"></label>
+                <input asp-for="Venue.City" class="form-control" />
+                <span asp-validation-for="Venue.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Venue.TimeZone" class="control-label"></label>
+                <select asp-for="Venue.TimeZone" asp-items="@Model.TimeZones" class="form-control">
+                    <option value="">Select Time Zone</option>
+                </select>
+                <span asp-validation-for="Venue.TimeZone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Venue.Latitude" class="control-label"></label>
+                <input asp-for="Venue.Latitude" class="form-control" />
+                <span asp-validation-for="Venue.Latitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Venue.Longitude" class="control-label"></label>
+                <input asp-for="Venue.Longitude" class="form-control" />
+                <span asp-validation-for="Venue.Longitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

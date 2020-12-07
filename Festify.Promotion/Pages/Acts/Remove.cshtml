@@ -1,0 +1,31 @@
+﻿@page "~/Acts/{ActGuid}/Remove"
+@model Festify.Promotion.Pages.Acts.RemoveModel
+@{
+    Layout = "_Layout";
+}
+
+<h1>Remove Act</h1>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-8">
+            <p>This act will be removed. Please confirm.</p>
+
+            <h5>@Model.Title</h5>
+
+            <form method="post">
+                <div>
+                    <button type="submit" class="btn btn-danger">Remove</button>
+                    <a class="btn btn-light" href="~/">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-4">
+            @if (Model.ImageHash != null)
+            {
+                <img class="show-image" src="@Url.Content($"~/content/{Uri.EscapeDataString(Model.ImageHash)}")" alt="@Model.Title">
+            }
+        </div>
+    </div>
+</div>

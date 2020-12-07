@@ -1,48 +1,29 @@
 ﻿@page
-@model Festify.Promotion.Pages.IndexModel
-@using System.Web
+@model IndexModel
 @{
-    Layout = "_Layout";
+    ViewData["Title"] = "Acts";
 }
 
-<h1>Festify Promotion System</h1>
+<h1>Acts</h1>
 
-<a type="button" class="btn btn-primary" href="~/Show/@Guid.NewGuid().ToString()">Add Show</a>
+<a type="button" class="btn btn-primary" href="~/Acts/@Guid.NewGuid().ToString()">Add Act</a>
 
 <div class="d-flex show-container">
-    @foreach (var show in Model.Shows)
+    @foreach (var show in Model.Acts)
     {
-        if (show.Description == null)
-        {
-            <div class="card show-item">
-                <img src="~/images/NewShow.jpg" class="card-img-top" alt="New Show">
-                <div class="card-body">
-                    <h5 class="card-title">New Show</h5>
-                </div>
-                <div class="card-footer">
-                    <a href="~/Show/@show.ShowGuid" class="btn btn-primary">Edit</a>
-                </div>
+        <div class="card show-item">
+            <img src="@Url.Content(show.ImageHash == null ? "~/images/NoImage.jpg" : $"~/content/{Uri.EscapeDataString(show.ImageHash)}")" class="card-img-top" alt="@show.Title">
+            <div class="card-body">
+                <h5 class="card-title">@show.Title</h5>
             </div>
-        }
-        else
-        {
-            <div class="card show-item">
-                <img src="@Url.Content(show.Description.ImageHash == null ? "~/images/NoImage.jpg" : $"~/content/{Uri.EscapeDataString(show.Description.ImageHash)}")" class="card-img-top" alt="@show.Description.Title">
-                <div class="card-body">
-                    <h5 class="card-title">@show.Description.Title</h5>
-                    <p class="card-text">@show.Description.City</p>
-                    <p class="card-text">@show.Description.Venue</p>
-                    <p class="card-text">@show.Description.Date.ToShortDateString()</p>
-                </div>
-                <div class="card-footer">
-                    <a href="~/Show/@show.ShowGuid" class="btn btn-primary">Edit</a>
-                    <a href="~/ShowRemove/@show.ShowGuid" class="btn btn-danger">Remove</a>
-                </div>
+            <div class="card-footer">
+                <a href="~/Acts/@show.ActGuid" class="btn btn-primary">Edit</a>
+                <a href="~/Acts/@show.ActGuid/Remove" class="btn btn-danger">Remove</a>
             </div>
-        }
+        </div>
     }
 </div>
 
-@section script
+@section scripts
 {
 }

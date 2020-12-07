@@ -1,0 +1,45 @@
+﻿@page "{ActGuid}"
+@model Festify.Promotion.Pages.Acts.IndexModel
+@{
+    Layout = "_Layout";
+}
+
+<h1>@(Model.AddAct ? "Add Act" : "Edit Act")</h1>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-8">
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="Title">Title</label>
+                    <input class="form-control" asp-for="Title">
+                </div>
+                <div class="form-group">
+                    <label for="Image">Image</label>
+                    <input class="form-control" asp-for="Image">
+                </div>
+                <input type="hidden" asp-for="ImageHash" />
+                <input type="hidden" asp-for="LastModifiedTicks" />
+                <button type="submit" class="btn btn-primary">@(Model.AddAct ? "Add" : "Save")</button>
+                @if (!Model.AddAct)
+                {
+                    <a class="btn btn-danger" href="~/Acts/@Model.ActGuid/Remove">Remove</a>
+                }
+                <a class="btn btn-light" href="~/">Cancel</a>
+            </form>
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger" role="alert">
+                    @Model.ErrorMessage
+                </div>
+            }
+        </div>
+
+        <div class="col-4">
+            @if (Model.ImageHash != null)
+            {
+                <img class="show-image" src="@Url.Content($"~/content/{Uri.EscapeDataString(Model.ImageHash)}")" alt="@Model.Title">
+            }
+        </div>
+    </div>
+</div>
