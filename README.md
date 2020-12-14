@@ -1,46 +1,76 @@
-# Festify
+# Festify Example Application
 
-An example [Immutable Architecture](https://immutablearchitecture.com).
+Example app for the course "Fundamentals of Distributed Systems" on Pluralsight, by Michael L Perry.
 
-## Prerequisites
+## Setting Up a Mac
 
-Please install:
+To run on a Mac, you will need to run SQL Server in a Docker container.
+Install Docker Desktop for the Mac, and then pull the base image using `Scripts/pull.sh`.
+Then start up a container using `Scripts/startsql.sh`.
 
-* [Dot Net Core](https://dotnet.microsoft.com/download/dotnet-core/3.1)
-* [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) Developer Edition
+To connect to that instance of SQL Server, you will need to change the connection string.
+The easiest way to do this is with User Secrets.
+Manage the user secrets for Festify.Promotion.csproj.
+You can use the [.NET Core User Secrets](https://marketplace.visualstudio.com/items?itemName=adrianwilczynski.user-secrets) extension by Adrian Wilczyński.
+Set your user secrets file like this:
 
-## Getting Started
-
-Clone the repository.
-Build with:
-
-```powershell
-dotnet build
+```json
+{
+    "ConnectionStrings": {
+        "PromotionContext": "Data Source=.;Database=Festify-promotion;User ID=sa;Password=Pass@word1;MultipleActiveResultSets=true"
+    }
+}
 ```
 
-Run the tests with:
+## Creating the Database
 
-```powershell
-dotnet test
-```
+Install the EF command-line tools in order to work with the application database.
+Run this command:
 
-Before you run, create your database.
-The database will be created in your local SQL Server instance and be named `festify`.
-
-```powershell
-dotnet ef database update --project .\Festify.Promotion\
-```
-
-If that fails because `dotnet-ef` does not exist, then you can install it with:
-
-```powershell
+```bash
 dotnet tool install --global dotnet-ef
 ```
 
-Then to run the application:
+Initialize the application database by running migrations.
+Use the following command:
 
-```powershell
-dotnet watch --project .\Festify.Promotion\ run
+```bash
+dotnet ef database update --project Festify.Promotion/
 ```
 
-Then you browse to [https://localhost:5001].
+## Running the App
+
+Start up the Promotion Web application with this command:
+
+```bash
+dotnet run --project Festify.Promotion
+```
+
+Or run Festify.Promotion from Visual Studio.
+
+## Running the Emailer
+
+The Emailer is a mock service that stands in for a process that emails about new shows.
+It uses MassTransit to manage RabbitMQ.
+To start RabbitMQ, create a Docker container.
+To start it in a Docker container, run the shell script:
+
+```bash
+Scripts/startrabbitmq.sh
+```
+
+Then start the Emailer and schedule a show.
+
+## Running the Indexer
+
+The Indexer also requires RabbitMQ.
+Follow the instructions above for the Emailer.
+In addition, the Indexer requires Elasticsearch.
+To start it in a Docker container, run the shell script:
+
+```bash
+Scripts/startelasticsearch.sh
+```
+
+Visit [http://localhost:9200](http://localhost:9200) in your browser to verify that it is running.
+Then schedule a show and query Elasticsearch at [http://localhost:9200/shows/_search?pretty](http://localhost:9200/shows/_search?pretty).

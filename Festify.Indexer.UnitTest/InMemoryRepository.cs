@@ -1,6 +1,4 @@
-﻿using Festify.Promotion.Messages.Acts;
-using Festify.Promotion.Messages.Shows;
-using System;
+﻿using Festify.Indexer.Documents;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -10,21 +8,69 @@ namespace Festify.Indexer.UnitTest
 {
     class InMemoryRepository : IRepository
     {
-        private IList<ShowAdded> shows = new List<ShowAdded>();
+        private List<ShowDocument> shows = new List<ShowDocument>();
+        private List<VenueDocument> venues = new List<VenueDocument>();
+        private List<ActDocument> acts = new List<ActDocument>();
 
-        public ICollection<ShowAdded> Shows => shows;
+        public ICollection<ShowDocument> Shows => shows;
 
-        public Task IndexShow(ShowAdded showAdded)
+        public Task<VenueDocument> GetVenue(string venueGuid)
         {
-            shows.Add(DeepCopy(showAdded));
+            return Task.FromResult(venues.SingleOrDefault(venue => venue.VenueGuid == venueGuid));
+        }
+
+        public Task<ActDocument> GetAct(string actGuid)
+        {
+            return Task.FromResult(acts.SingleOrDefault(act => act.ActGuid == actGuid));
+        }
+
+        public Task IndexVenue(VenueDocument venue)
+        {
+            venues.RemoveAll(v => v.VenueGuid == venue.VenueGuid);
+            venues.Add(DeepCopy(venue));
             return Task.CompletedTask;
         }
 
-        public Task UpdateShowsWithActDescription(Guid actGuid, ActDescriptionRepresentation description)
+        public Task IndexAct(ActDocument act)
         {
-            foreach (var show in shows.Where(s => s.act.actGuid == actGuid))
+            acts.RemoveAll(a => a.ActGuid == act.ActGuid);
+            acts.Add(DeepCopy(act));
+            return Task.CompletedTask;
+        }
+
+        public Task IndexShow(ShowDocument ShowDocument)
+        {
+            shows.RemoveAll(s =>
+                s.ActGuid == ShowDocument.ActGuid &&
+                s.VenueGuid == ShowDocument.VenueGuid &&
+                s.StartTime == ShowDocument.StartTime);
+            shows.Add(DeepCopy(ShowDocument));
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateShowsWithVenueDescription(string venueGuid, VenueDescription venueDescription)
+        {
+            foreach (var show in shows.Where(s => s.VenueGuid == venueGuid))
             {
-                show.act.description = DeepCopy(description);
+                show.VenueDescription = DeepCopy(venueDescription);
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateShowsWithVenueLocation(string venueGuid, VenueLocation venueLocation)
+        {
+            foreach (var show in shows.Where(s => s.VenueGuid == venueGuid))
+            {
+                show.VenueLocation = DeepCopy(venueLocation);
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateShowsWithActDescription(string actGuid, ActDescription actDescription)
+        {
+            foreach (var show in shows.Where(s => s.ActGuid == actGuid))
+            {
+                show.ActDescription = DeepCopy(actDescription);
             }
             return Task.CompletedTask;
         }

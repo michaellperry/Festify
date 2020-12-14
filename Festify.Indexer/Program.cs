@@ -1,6 +1,10 @@
-﻿using Festify.Indexer.Elasticsearch;
+﻿using Festify.Indexer.Documents;
+using Festify.Indexer.Elasticsearch;
+using Festify.Indexer.Handlers;
+using Festify.Indexer.Updaters;
 using Festify.Promotion.Messages.Acts;
 using Festify.Promotion.Messages.Shows;
+using Festify.Promotion.Messages.Venues;
 using GreenPipes;
 using MassTransit;
 using Nest;
@@ -14,11 +18,23 @@ namespace Festify.Indexer
         static async Task Main(string[] args)
         {
             var settings = new ConnectionSettings(new Uri("http://localhost:9200"))
-                .DefaultIndex("shows");
+                .DefaultMappingFor<ShowDocument>(m => m
+                    .IndexName("shows")
+                )
+                .DefaultMappingFor<ActDocument>(m => m
+                    .IndexName("acts")
+                )
+                .DefaultMappingFor<VenueDocument>(m => m
+                    .IndexName("venues")
+                );
             var elasticClient = new ElasticClient(settings);
             var elasticsearchRepository = new ElasticsearchRepository(elasticClient);
+            var actUpdater = new ActUpdater(elasticsearchRepository);
+            var venueUpdater = new VenueUpdater(elasticsearchRepository);
             var showAddedHandler = new ShowAddedHandler(elasticsearchRepository);
             var actDescriptionChangedHandler = new ActDescriptionChangedHandler(elasticsearchRepository);
+            var venueDescriptionChangedHandler = new VenueDescriptionChangedHandler(elasticsearchRepository);
+            var venueLocationChangedHandler = new VenueLocationChangedHandler(elasticsearchRepository);
 
             var bus = Bus.Factory.CreateUsingRabbitMq(busConfig =>
             {
@@ -35,6 +51,10 @@ namespace Festify.Indexer
                         await showAddedHandler.Handle(context.Message));
                     endpointConfig.Handler<ActDescriptionChanged>(async context =>
                         await actDescriptionChangedHandler.Handle(context.Message));
+                    endpointConfig.Handler<VenueDescriptionChanged>(async context =>
+                        await venueDescriptionChangedHandler.Handle(context.Message));
+                    endpointConfig.Handler<VenueLocationChanged>(async context =>
+                        await venueLocationChangedHandler.Handle(context.Message));
                 });
             });
 

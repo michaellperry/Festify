@@ -1,8 +1,9 @@
-﻿using Festify.Promotion.Messages.Acts;
+﻿using Festify.Indexer.Documents;
+using Festify.Promotion.Messages.Acts;
 using System;
 using System.Threading.Tasks;
 
-namespace Festify.Indexer
+namespace Festify.Indexer.Handlers
 {
     public class ActDescriptionChangedHandler
     {
@@ -18,7 +19,9 @@ namespace Festify.Indexer
             Console.WriteLine($"Updating index for act {actDescriptionChanged.description.title}.");
             try
             {
-                await repository.UpdateShowsWithActDescription(actDescriptionChanged.actGuid, actDescriptionChanged.description);
+                string actGuid = actDescriptionChanged.actGuid.ToString().ToLower();
+                ActDescription actDescription = ActDescription.FromRepresentation(actDescriptionChanged.description);
+                await repository.UpdateShowsWithActDescription(actGuid, actDescription);
                 Console.WriteLine("Succeeded");
             }
             catch (Exception ex)
