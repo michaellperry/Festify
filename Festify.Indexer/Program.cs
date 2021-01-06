@@ -31,10 +31,10 @@ namespace Festify.Indexer
             var elasticsearchRepository = new ElasticsearchRepository(elasticClient);
             var actUpdater = new ActUpdater(elasticsearchRepository);
             var venueUpdater = new VenueUpdater(elasticsearchRepository);
-            var showAddedHandler = new ShowAddedHandler(elasticsearchRepository);
-            var actDescriptionChangedHandler = new ActDescriptionChangedHandler(elasticsearchRepository);
-            var venueDescriptionChangedHandler = new VenueDescriptionChangedHandler(elasticsearchRepository);
-            var venueLocationChangedHandler = new VenueLocationChangedHandler(elasticsearchRepository);
+            var showAddedHandler = new ShowAddedHandler(elasticsearchRepository, actUpdater, venueUpdater);
+            var actDescriptionChangedHandler = new ActDescriptionChangedHandler(elasticsearchRepository, actUpdater);
+            var venueDescriptionChangedHandler = new VenueDescriptionChangedHandler(elasticsearchRepository, venueUpdater);
+            var venueLocationChangedHandler = new VenueLocationChangedHandler(elasticsearchRepository, venueUpdater);
 
             var bus = Bus.Factory.CreateUsingRabbitMq(busConfig =>
             {

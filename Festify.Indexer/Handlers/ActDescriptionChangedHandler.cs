@@ -1,4 +1,5 @@
-﻿using Festify.Indexer.Documents;
+using Festify.Indexer.Documents;
+using Festify.Indexer.Updaters;
 using Festify.Promotion.Messages.Acts;
 using System;
 using System.Threading.Tasks;
@@ -8,10 +9,12 @@ namespace Festify.Indexer.Handlers
     public class ActDescriptionChangedHandler
     {
         private readonly IRepository repository;
+        private readonly ActUpdater actUpdater;
 
-        public ActDescriptionChangedHandler(IRepository repository)
+        public ActDescriptionChangedHandler(IRepository repository, ActUpdater actUpdater)
         {
             this.repository = repository;
+            this.actUpdater = actUpdater;
         }
 
         public async Task Handle(ActDescriptionChanged actDescriptionChanged)
@@ -21,7 +24,12 @@ namespace Festify.Indexer.Handlers
             {
                 string actGuid = actDescriptionChanged.actGuid.ToString().ToLower();
                 ActDescription actDescription = ActDescription.FromRepresentation(actDescriptionChanged.description);
-                await repository.UpdateShowsWithActDescription(actGuid, actDescription);
+                ActDocument act = await actUpdater.UpdateAndGetLatestAct(new ActDocument
+                {
+                    ActGuid = actGuid,
+                    Description = actDescription
+                });
+                await repository.UpdateShowsWithActDescription(actGuid, act.Description);
                 Console.WriteLine("Succeeded");
             }
             catch (Exception ex)
