@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Festify.Emailer", "Festify.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Festify.Indexer.UnitTest", "Festify.Indexer.UnitTest\Festify.Indexer.UnitTest.csproj", "{7A930C25-82B8-4645-AE34-D174850C2F8D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Festify.Sales", "Festify.Sales\Festify.Sales.csproj", "{E3001FA7-F308-460D-9028-1E54686B4380}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Festify.Sales.Messages", "Festify.Sales.Messages\Festify.Sales.Messages.csproj", "{CC105411-DE68-4F12-8273-BC770797F2F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +52,14 @@ Global
 		{7A930C25-82B8-4645-AE34-D174850C2F8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A930C25-82B8-4645-AE34-D174850C2F8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A930C25-82B8-4645-AE34-D174850C2F8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3001FA7-F308-460D-9028-1E54686B4380}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3001FA7-F308-460D-9028-1E54686B4380}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3001FA7-F308-460D-9028-1E54686B4380}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3001FA7-F308-460D-9028-1E54686B4380}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC105411-DE68-4F12-8273-BC770797F2F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC105411-DE68-4F12-8273-BC770797F2F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC105411-DE68-4F12-8273-BC770797F2F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC105411-DE68-4F12-8273-BC770797F2F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
