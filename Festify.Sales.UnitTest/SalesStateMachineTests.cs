@@ -88,6 +88,16 @@ namespace Festify.Sales.UnitTest
                 .Should().NotBeNull();
         }
 
+        [Fact]
+        public async Task WhenInventoryIsLocked_SaleIsLocked()
+        {
+            var purchaseGuid = await WhenPurchaseSubmitted();
+            await WhenInventoryLocked();
+
+            sagaHarness.Created.ContainsInState(purchaseGuid, machine, machine.Locked)
+                .Should().NotBeNull();
+        }
+
         private async Task<Guid> WhenPurchaseSubmitted(
             decimal itemTotal = 10.00m,
             string itemSku = "DefaultItem",
@@ -117,6 +127,20 @@ namespace Festify.Sales.UnitTest
                 {
                     purchaseGuid = message.purchaseGuid,
                     reservation = message.reservation
+                });
+            }
+        }
+
+        private async Task WhenInventoryLocked()
+        {
+            var commands = harness.Published.Select<LockInventory>();
+            foreach (var command in commands)
+            {
+                LockInventory message = command.Context.Message;
+                await harness.Bus.Publish(new InventoryLocked
+                {
+                    purchaseGuid = message.purchaseGuid,
+                    inventory = message.inventory
                 });
             }
         }

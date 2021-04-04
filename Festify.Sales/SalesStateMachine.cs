@@ -9,8 +9,13 @@ namespace Festify.Sales
 {
     public class SalesStateMachine : MassTransitStateMachine<SalesState>
     {
+        public Event<PurchaseSubmitted> PurchaseSubmitted { get; private set; }
+        public Event<FundsReserved> FundsReserved { get; private set; }
+        public Event<InventoryLocked> InventoryLocked { get; private set; }
+
         public State Started { get; private set; }
         public State Funded { get; private set; }
+        public State Locked { get; private set; }
 
         public SalesStateMachine()
         {
@@ -21,6 +26,9 @@ namespace Festify.Sales
                 x => x.CorrelateById(context => context.Message.purchaseGuid));
             Event(
                 () => FundsReserved,
+                x => x.CorrelateById(context => context.Message.purchaseGuid));
+            Event(
+                () => InventoryLocked,
                 x => x.CorrelateById(context => context.Message.purchaseGuid));
 
             Initially(
@@ -49,9 +57,11 @@ namespace Festify.Sales
                 When(FundsReserved)
                     .TransitionTo(Funded)
             );
-        }
 
-        public Event<PurchaseSubmitted> PurchaseSubmitted { get; private set; }
-        public Event<FundsReserved> FundsReserved { get; private set; }
+            During(Started,
+                When(InventoryLocked)
+                    .TransitionTo(Locked)
+            );
+        }
     }
 }
