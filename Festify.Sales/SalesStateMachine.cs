@@ -1,5 +1,6 @@
 using System;
 using Automatonymous;
+using Festify.Sales.Messages.Logistics;
 using Festify.Sales.Messages.Payments;
 using Festify.Sales.Messages.Purchases;
 using Festify.Sales.States;
@@ -30,6 +31,15 @@ namespace Festify.Sales
                         reservation = new ReservationRepresentation
                         {
                             amount = x.Data.purchase.itemTotal
+                        }
+                    }))
+                    .Then(x => x.Publish(new LockInventory
+                    {
+                        purchaseGuid = x.Data.purchaseGuid,
+                        inventory = new InventoryRepresentation
+                        {
+                            sku = x.Data.purchase.itemSku,
+                            quantity = x.Data.purchase.itemQuantity
                         }
                     }))
                     .TransitionTo(Started)

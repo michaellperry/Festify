@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Festify.Sales.Messages.Logistics;
 using Festify.Sales.Messages.Payments;
 using Festify.Sales.Messages.Purchases;
 using Festify.Sales.States;
@@ -59,6 +60,25 @@ namespace Festify.Sales.UnitTest
         }
 
         [Fact]
+        public async Task WhenPurchaseSubmitted_LockInventoryIsRequested()
+        {
+            string itemSku = "Pie";
+            int itemQuantity = 2;
+            var purchaseGuid = await WhenPurchaseSubmitted(
+                itemSku: itemSku,
+                itemQuantity: itemQuantity);
+
+            harness.Published.Select<LockInventory>().Should().HaveCount(1)
+                .And.SatisfyRespectively(x =>
+                {
+                    var lockInventory = x.Context.Message;
+                    lockInventory.purchaseGuid.Should().Be(purchaseGuid);
+                    lockInventory.inventory.sku.Should().Be(itemSku);
+                    lockInventory.inventory.quantity.Should().Be(itemQuantity);
+                });
+        }
+
+        [Fact]
         public async Task WhenFundsAreReserved_SaleIsFunded()
         {
             var purchaseGuid = await WhenPurchaseSubmitted();
@@ -69,7 +89,9 @@ namespace Festify.Sales.UnitTest
         }
 
         private async Task<Guid> WhenPurchaseSubmitted(
-            decimal itemTotal = 10.00m)
+            decimal itemTotal = 10.00m,
+            string itemSku = "DefaultItem",
+            int itemQuantity = 1)
         {
             var purchaseGuid = Guid.NewGuid();
             await harness.Bus.Publish(new PurchaseSubmitted
@@ -77,7 +99,9 @@ namespace Festify.Sales.UnitTest
                 purchaseGuid = purchaseGuid,
                 purchase = new PurchaseRepresentation
                 {
-                    itemTotal = itemTotal
+                    itemTotal = itemTotal,
+                    itemSku = itemSku,
+                    itemQuantity = itemQuantity
                 }
             });
             return purchaseGuid;
