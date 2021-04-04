@@ -11,11 +11,13 @@ namespace Festify.Sales
     {
         public Event<PurchaseSubmitted> PurchaseSubmitted { get; private set; }
         public Event<FundsReserved> FundsReserved { get; private set; }
+        public Event<InsufficientFunds> InsufficientFunds { get; private set; }
         public Event<InventoryLocked> InventoryLocked { get; private set; }
 
         public State Started { get; private set; }
         public State Funded { get; private set; }
         public State Locked { get; private set; }
+        public State Failed { get; private set; }
 
         public SalesStateMachine()
         {
@@ -29,6 +31,9 @@ namespace Festify.Sales
                 x => x.CorrelateById(context => context.Message.purchaseGuid));
             Event(
                 () => InventoryLocked,
+                x => x.CorrelateById(context => context.Message.purchaseGuid));
+            Event(
+                () => InsufficientFunds,
                 x => x.CorrelateById(context => context.Message.purchaseGuid));
 
             Initially(
@@ -60,7 +65,18 @@ namespace Festify.Sales
 
             During(Started,
                 When(InventoryLocked)
+                    .Then(x => x.Instance.Inventory = x.Data.inventory)
                     .TransitionTo(Locked)
+            );
+
+            During(Locked,
+                When(InsufficientFunds)
+                    .Then(x => x.Publish(new UnlockInventory
+                    {
+                        purchaseGuid = x.Data.purchaseGuid,
+                        inventory = x.Instance.Inventory
+                    }))
+                    .TransitionTo(Failed)
             );
         }
     }

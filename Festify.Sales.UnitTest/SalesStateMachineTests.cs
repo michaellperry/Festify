@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using System.Threading.Tasks;
 using Festify.Sales.Messages.Logistics;
@@ -98,6 +99,34 @@ namespace Festify.Sales.UnitTest
                 .Should().NotBeNull();
         }
 
+        [Fact]
+        public async Task WhenInsufficientFunds_InventoryUnlockIsRequested()
+        {
+            string itemSku = "Pie";
+            int itemQuantity = 2;
+
+            var purchaseGuid = await WhenPurchaseSubmitted(
+                itemSku: itemSku,
+                itemQuantity: itemQuantity
+            );
+            harness.Published.Select<LockInventory>().Should().HaveCount(1);
+            harness.Published.Select<ReserveFunds>().Should().HaveCount(1);
+            await WhenInventoryLocked();
+            await WhenInsufficientFunds();
+
+            harness.Published.Select<UnlockInventory>().Should().HaveCount(1)
+                .And.SatisfyRespectively(x =>
+                {
+                    var unlockInventory = x.Context.Message;
+                    unlockInventory.purchaseGuid.Should().Be(purchaseGuid);
+                    unlockInventory.inventory.sku.Should().Be(itemSku);
+                    unlockInventory.inventory.quantity.Should().Be(itemQuantity);
+                });
+
+            sagaHarness.Created.ContainsInState(purchaseGuid, machine, machine.Failed)
+                .Should().NotBeNull();
+        }
+
         private async Task<Guid> WhenPurchaseSubmitted(
             decimal itemTotal = 10.00m,
             string itemSku = "DefaultItem",
@@ -119,7 +148,8 @@ namespace Festify.Sales.UnitTest
 
         private async Task WhenFundsReserved()
         {
-            var commands = harness.Published.Select<ReserveFunds>();
+            var commands = harness.Published.Select<ReserveFunds>().ToList();
+            commands.Should().NotBeEmpty();
             foreach (var command in commands)
             {
                 ReserveFunds message = command.Context.Message;
@@ -128,12 +158,34 @@ namespace Festify.Sales.UnitTest
                     purchaseGuid = message.purchaseGuid,
                     reservation = message.reservation
                 });
+                await Task.Delay(10);
             }
+
+            harness.Consumed.Select<FundsReserved>().Should().NotBeEmpty();
+        }
+
+        private async Task WhenInsufficientFunds()
+        {
+            var commands = harness.Published.Select<ReserveFunds>().ToList();
+            commands.Should().NotBeEmpty();
+            foreach (var command in commands)
+            {
+                ReserveFunds message = command.Context.Message;
+                await harness.Bus.Publish(new InsufficientFunds
+                {
+                    purchaseGuid = message.purchaseGuid,
+                    reservation = message.reservation
+                });
+                await Task.Delay(10);
+            }
+
+            harness.Consumed.Select<InsufficientFunds>().Should().NotBeEmpty();
         }
 
         private async Task WhenInventoryLocked()
         {
-            var commands = harness.Published.Select<LockInventory>();
+            var commands = harness.Published.Select<LockInventory>().ToList();
+            commands.Should().NotBeEmpty();
             foreach (var command in commands)
             {
                 LockInventory message = command.Context.Message;
@@ -142,7 +194,10 @@ namespace Festify.Sales.UnitTest
                     purchaseGuid = message.purchaseGuid,
                     inventory = message.inventory
                 });
+                await Task.Delay(10);
             }
+
+            harness.Consumed.Select<InventoryLocked>().Should().NotBeEmpty();
         }
     }
 }

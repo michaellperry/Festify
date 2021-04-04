@@ -1,6 +1,6 @@
 using System;
 using Automatonymous;
-using MassTransit;
+using Festify.Sales.Messages.Logistics;
 
 namespace Festify.Sales.States
 {
@@ -8,5 +8,7 @@ namespace Festify.Sales.States
     {
         public Guid CorrelationId { get; set; }
         public string CurrentState { get; set; }
+
+        public InventoryRepresentation Inventory { get; set; }
     }
 }
