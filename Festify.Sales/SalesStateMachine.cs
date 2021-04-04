@@ -1,5 +1,6 @@
 using Automatonymous;
-using Festify.Sales.Messages;
+using Festify.Sales.Messages.Payments;
+using Festify.Sales.Messages.Purchases;
 using Festify.Sales.States;
 
 namespace Festify.Sales
@@ -14,10 +15,17 @@ namespace Festify.Sales
 
             Event(
                 () => PurchaseSubmitted,
-                x => x.CorrelateById(context => context.Message.PurchaseGuid));
+                x => x.CorrelateById(context => context.Message.purchaseGuid));
 
             Initially(
                 When(PurchaseSubmitted)
+                    .Then(x => x.Publish(new ReserveFunds
+                    {
+                        reservation = new ReservationRepresentation
+                        {
+                            amount = x.Data.purchase.itemTotal
+                        }
+                    }))
                     .TransitionTo(Started)
             );
         }
