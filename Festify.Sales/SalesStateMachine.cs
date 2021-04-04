@@ -4,7 +4,7 @@ using Festify.Sales.States;
 
 namespace Festify.Sales
 {
-    class SalesStateMachine : MassTransitStateMachine<SalesState>
+    public class SalesStateMachine : MassTransitStateMachine<SalesState>
     {
         public State Started { get; private set; }
 
