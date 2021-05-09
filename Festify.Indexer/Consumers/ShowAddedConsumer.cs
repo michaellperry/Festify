@@ -1,26 +1,28 @@
 using Festify.Indexer.Documents;
 using Festify.Indexer.Updaters;
 using Festify.Promotion.Messages.Shows;
+using MassTransit;
 using System;
 using System.Threading.Tasks;
 
-namespace Festify.Indexer.Handlers
+namespace Festify.Indexer.Consumers
 {
-    public class ShowAddedHandler
+    public class ShowAddedConsumer : IConsumer<ShowAdded>
     {
         private readonly IRepository repository;
         private readonly ActUpdater actUpdater;
         private readonly VenueUpdater venueUpdater;
 
-        public ShowAddedHandler(IRepository repository, ActUpdater actUpdater, VenueUpdater venueUpdater)
+        public ShowAddedConsumer(IRepository repository, ActUpdater actUpdater, VenueUpdater venueUpdater)
         {
             this.repository = repository;
             this.actUpdater = actUpdater;
             this.venueUpdater = venueUpdater;
         }
 
-        public async Task Handle(ShowAdded showAdded)
+        public async Task Consume(ConsumeContext<ShowAdded> context)
         {
+            var showAdded = context.Message;
             Console.WriteLine($"Indexing a show for {showAdded.act.description.title} at {showAdded.venue.description.name}.");
             try
             {

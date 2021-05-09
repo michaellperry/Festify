@@ -1,9 +1,11 @@
-using FluentAssertions;
-using Festify.Indexer.Handlers;
-using Festify.Indexer.Updaters;
+using Autofac;
+using Festify.Indexer.Consumers;
 using Festify.Promotion.Messages.Acts;
 using Festify.Promotion.Messages.Shows;
 using Festify.Promotion.Messages.Venues;
+using FluentAssertions;
+using MassTransit.AutofacIntegration;
+using MassTransit.Testing;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,26 +13,45 @@ using Xunit;
 
 namespace Festify.Indexer.UnitTest
 {
-    public class HandlerTests
+    public class HandlerTests : IAsyncDisposable
     {
         private readonly InMemoryRepository repository;
-        private readonly ShowAddedHandler showAddedHandler;
-        private readonly ActDescriptionChangedHandler actDescriptionChangedHandler;
-        private readonly VenueDescriptionChangedHandler venueDescriptionChangedHandler;
-        private readonly VenueLocationChangedHandler venueLocationChangedHandler;
+        private readonly IContainer container;
+        private readonly InMemoryTestHarness harness;
 
         private readonly Guid actGuid = Guid.NewGuid();
         private readonly Guid venueGuid = Guid.NewGuid();
 
         public HandlerTests()
         {
-            repository = new InMemoryRepository();
-            var actUpdater = new ActUpdater(repository);
-            var venueUpdater = new VenueUpdater(repository);
-            showAddedHandler = new ShowAddedHandler(repository, actUpdater, venueUpdater);
-            actDescriptionChangedHandler = new ActDescriptionChangedHandler(repository, actUpdater);
-            venueDescriptionChangedHandler = new VenueDescriptionChangedHandler(repository, venueUpdater);
-            venueLocationChangedHandler = new VenueLocationChangedHandler(repository, venueUpdater);
+            var builder = new ContainerBuilder();
+
+            builder
+                .RegisterType<InMemoryRepository>()
+                .AsSelf()
+                .AsImplementedInterfaces()
+                .SingleInstance();
+            builder.RegisterModule<IndexerModule>();
+            builder.AddMassTransitInMemoryTestHarness(busConfig =>
+            {
+                busConfig.AddConsumer<ShowAddedConsumer>();
+                busConfig.AddConsumer<ActDescriptionChangedConsumer>();
+                busConfig.AddConsumer<VenueDescriptionChangedConsumer>();
+                busConfig.AddConsumer<VenueLocationChangedConsumer>();
+            });
+
+            container = builder.Build();
+
+            harness = container.Resolve<InMemoryTestHarness>();
+            repository = container.Resolve<InMemoryRepository>();
+
+            harness.Start();
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await harness.Stop();
+            container.Dispose();
         }
 
         [Fact]
@@ -39,7 +60,9 @@ namespace Festify.Indexer.UnitTest
             var showAdded = GivenShowAdded(
                 actTitle: "Expected act title",
                 venueName: "Expected venue name");
-            await showAddedHandler.Handle(showAdded);
+            await WhenPublish(showAdded);
+
+            await harness.Stop();
 
             repository.Shows.Single().ActDescription.Title.Should().Be("Expected act title");
             repository.Shows.Single().VenueDescription.Name.Should().Be("Expected venue name");
@@ -51,8 +74,10 @@ namespace Festify.Indexer.UnitTest
             var showAdded = GivenShowAdded(actTitle: "Original Title", actDescriptionAge: 1);
             var actDescriptionChanged = GivenActDescriptionChanged(actTitle: "Modified Title");
 
-            await showAddedHandler.Handle(showAdded);
-            await actDescriptionChangedHandler.Handle(actDescriptionChanged);
+            await WhenPublish(showAdded);
+            await WhenPublish(actDescriptionChanged);
+
+            await harness.Stop();
 
             repository.Shows.Single().ActDescription.Title.Should().Be("Modified Title");
         }
@@ -63,8 +88,10 @@ namespace Festify.Indexer.UnitTest
             var showAdded = GivenShowAdded(actTitle: "Original Title", actDescriptionAge: 1);
             var actDescriptionChanged = GivenActDescriptionChanged(actTitle: "Modified Title");
 
-            await actDescriptionChangedHandler.Handle(actDescriptionChanged);
-            await showAddedHandler.Handle(showAdded);
+            await WhenPublish(actDescriptionChanged);
+            await WhenPublish(showAdded);
+
+            await harness.Stop();
 
             repository.Shows.Single().ActDescription.Title.Should().Be("Modified Title");
         }
@@ -75,8 +102,10 @@ namespace Festify.Indexer.UnitTest
             var showAdded = GivenShowAdded(venueName: "Original Name", venueDescriptionAge: 1);
             var venueDescriptionChanged = GivenVenueDescriptionChanged(venueName: "Modified Name");
 
-            await showAddedHandler.Handle(showAdded);
-            await venueDescriptionChangedHandler.Handle(venueDescriptionChanged);
+            await WhenPublish(showAdded);
+            await WhenPublish(venueDescriptionChanged);
+
+            await harness.Stop();
 
             repository.Shows.Single().VenueDescription.Name.Should().Be("Modified Name");
         }
@@ -87,8 +116,10 @@ namespace Festify.Indexer.UnitTest
             var showAdded = GivenShowAdded(venueName: "Original Name", venueDescriptionAge: 1);
             var venueDescriptionChanged = GivenVenueDescriptionChanged(venueName: "Modified Name");
 
-            await venueDescriptionChangedHandler.Handle(venueDescriptionChanged);
-            await showAddedHandler.Handle(showAdded);
+            await WhenPublish(venueDescriptionChanged);
+            await WhenPublish(showAdded);
+
+            await harness.Stop();
 
             repository.Shows.Single().VenueDescription.Name.Should().Be("Modified Name");
         }
@@ -99,8 +130,10 @@ namespace Festify.Indexer.UnitTest
             var showAdded = GivenShowAdded(latitude: 0.0f, venueLocationAge: 1);
             var venueLocationChanged = GivenVenueLocationChanged(latitude: 45.0f);
 
-            await showAddedHandler.Handle(showAdded);
-            await venueLocationChangedHandler.Handle(venueLocationChanged);
+            await WhenPublish(showAdded);
+            await WhenPublish(venueLocationChanged);
+
+            await harness.Stop();
 
             repository.Shows.Single().VenueLocation.Latitude.Should().Be(45.0f);
         }
@@ -111,8 +144,10 @@ namespace Festify.Indexer.UnitTest
             var showAdded = GivenShowAdded(latitude: 0.0f, venueLocationAge: 1);
             var venueLocationChanged = GivenVenueLocationChanged(latitude: 45.0f);
 
-            await venueLocationChangedHandler.Handle(venueLocationChanged);
-            await showAddedHandler.Handle(showAdded);
+            await WhenPublish(venueLocationChanged);
+            await WhenPublish(showAdded);
+
+            await harness.Stop();
 
             repository.Shows.Single().VenueLocation.Latitude.Should().Be(45.0f);
         }
@@ -217,6 +252,11 @@ namespace Festify.Indexer.UnitTest
                 imageHash = "abc123",
                 modifiedDate = DateTime.UtcNow.AddDays(-actDescriptionAge)
             };
+        }
+
+        private async Task WhenPublish(object message)
+        {
+            await harness.Bus.Publish(message);
         }
     }
 }

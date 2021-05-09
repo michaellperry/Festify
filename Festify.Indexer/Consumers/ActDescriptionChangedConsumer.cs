@@ -1,24 +1,26 @@
 using Festify.Indexer.Documents;
 using Festify.Indexer.Updaters;
 using Festify.Promotion.Messages.Acts;
+using MassTransit;
 using System;
 using System.Threading.Tasks;
 
-namespace Festify.Indexer.Handlers
+namespace Festify.Indexer.Consumers
 {
-    public class ActDescriptionChangedHandler
+    public class ActDescriptionChangedConsumer : IConsumer<ActDescriptionChanged>
     {
         private readonly IRepository repository;
         private readonly ActUpdater actUpdater;
 
-        public ActDescriptionChangedHandler(IRepository repository, ActUpdater actUpdater)
+        public ActDescriptionChangedConsumer(IRepository repository, ActUpdater actUpdater)
         {
             this.repository = repository;
             this.actUpdater = actUpdater;
         }
 
-        public async Task Handle(ActDescriptionChanged actDescriptionChanged)
+        public async Task Consume(ConsumeContext<ActDescriptionChanged> context)
         {
+            var actDescriptionChanged = context.Message;
             Console.WriteLine($"Updating index for act {actDescriptionChanged.description.title}.");
             try
             {

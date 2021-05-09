@@ -39,6 +39,8 @@ namespace Festify.Sales.UnitTest
         {
             var purchaseGuid = await WhenPurchaseSubmitted();
 
+            await harness.Stop();
+
             harness.Consumed.Select<PurchaseSubmitted>().Should().HaveCount(1);
             sagaHarness.Consumed.Select<PurchaseSubmitted>().Should().HaveCount(1);
             sagaHarness.Created.ContainsInState(purchaseGuid, machine, machine.Started)
@@ -50,6 +52,8 @@ namespace Festify.Sales.UnitTest
         {
             decimal itemTotal = 3.14m;
             var purchaseGuid = await WhenPurchaseSubmitted(itemTotal: itemTotal);
+
+            await harness.Stop();
 
             harness.Published.Select<ReserveFunds>().Should().HaveCount(1)
                 .And.SatisfyRespectively(x =>
@@ -69,6 +73,8 @@ namespace Festify.Sales.UnitTest
                 itemSku: itemSku,
                 itemQuantity: itemQuantity);
 
+            await harness.Stop();
+
             harness.Published.Select<LockInventory>().Should().HaveCount(1)
                 .And.SatisfyRespectively(x =>
                 {
@@ -85,6 +91,8 @@ namespace Festify.Sales.UnitTest
             var purchaseGuid = await WhenPurchaseSubmitted();
             await WhenFundsReserved();
 
+            await harness.Stop();
+
             sagaHarness.Created.ContainsInState(purchaseGuid, machine, machine.Funded)
                 .Should().NotBeNull();
         }
@@ -94,6 +102,8 @@ namespace Festify.Sales.UnitTest
         {
             var purchaseGuid = await WhenPurchaseSubmitted();
             await WhenInventoryLocked();
+
+            await harness.Stop();
 
             sagaHarness.Created.ContainsInState(purchaseGuid, machine, machine.Locked)
                 .Should().NotBeNull();
@@ -113,6 +123,8 @@ namespace Festify.Sales.UnitTest
             harness.Published.Select<ReserveFunds>().Should().HaveCount(1);
             await WhenInventoryLocked();
             await WhenInsufficientFunds();
+
+            await harness.Stop();
 
             harness.Published.Select<UnlockInventory>().Should().HaveCount(1)
                 .And.SatisfyRespectively(x =>
@@ -158,10 +170,7 @@ namespace Festify.Sales.UnitTest
                     purchaseGuid = message.purchaseGuid,
                     reservation = message.reservation
                 });
-                await Task.Delay(10);
             }
-
-            harness.Consumed.Select<FundsReserved>().Should().NotBeEmpty();
         }
 
         private async Task WhenInsufficientFunds()
@@ -176,10 +185,7 @@ namespace Festify.Sales.UnitTest
                     purchaseGuid = message.purchaseGuid,
                     reservation = message.reservation
                 });
-                await Task.Delay(10);
             }
-
-            harness.Consumed.Select<InsufficientFunds>().Should().NotBeEmpty();
         }
 
         private async Task WhenInventoryLocked()
@@ -194,10 +200,7 @@ namespace Festify.Sales.UnitTest
                     purchaseGuid = message.purchaseGuid,
                     inventory = message.inventory
                 });
-                await Task.Delay(10);
             }
-
-            harness.Consumed.Select<InventoryLocked>().Should().NotBeEmpty();
         }
     }
 }

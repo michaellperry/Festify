@@ -1,24 +1,26 @@
 ﻿using Festify.Indexer.Documents;
 using Festify.Indexer.Updaters;
 using Festify.Promotion.Messages.Venues;
+using MassTransit;
 using System;
 using System.Threading.Tasks;
 
-namespace Festify.Indexer.Handlers
+namespace Festify.Indexer.Consumers
 {
-    public class VenueDescriptionChangedHandler
+    public class VenueDescriptionChangedConsumer : IConsumer<VenueDescriptionChanged>
     {
         private readonly IRepository repository;
         private readonly VenueUpdater venueUpdater;
 
-        public VenueDescriptionChangedHandler(IRepository repository, VenueUpdater venueUpdater)
+        public VenueDescriptionChangedConsumer(IRepository repository, VenueUpdater venueUpdater)
         {
             this.repository = repository;
             this.venueUpdater = venueUpdater;
         }
 
-        public async Task Handle(VenueDescriptionChanged venueDescriptionChanged)
+        public async Task Consume(ConsumeContext<VenueDescriptionChanged> context)
         {
+            var venueDescriptionChanged = context.Message;
             Console.WriteLine($"Updating index for venue {venueDescriptionChanged.description.name}.");
             try
             {
