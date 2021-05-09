@@ -257,6 +257,7 @@ namespace Festify.Indexer.UnitTest
         private async Task WhenPublish(object message)
         {
             await harness.Bus.Publish(message);
+            await harness.InactivityObserver.NoActivity();
         }
     }
 }
