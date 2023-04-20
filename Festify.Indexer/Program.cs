@@ -5,7 +5,6 @@ using Festify.Indexer.Updaters;
 using Festify.Promotion.Messages.Acts;
 using Festify.Promotion.Messages.Shows;
 using Festify.Promotion.Messages.Venues;
-using GreenPipes;
 using MassTransit;
 using Nest;
 using System;

@@ -87,7 +87,7 @@ namespace Festify.Promotion.UnitTest
             {
                 await actCommands.SaveAct(ActModelWith(actGuid, "Jeff Foxworthy", versionOne.LastModifiedTicks));
             };
-            update.Should().Throw<DbUpdateConcurrencyException>();
+            await update.Should().ThrowAsync<DbUpdateConcurrencyException>();
         }
 
         [Fact]
