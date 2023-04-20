@@ -69,7 +69,8 @@ namespace Festify.Promotion.UnitTest
             var actGuid = Guid.NewGuid();
             var actModel = new ActInfo
             {
-                ActGuid = actGuid
+                ActGuid = actGuid,
+                Title = "Test Act"
             };
             await actCommands.SaveAct(actModel);
             return actGuid;
@@ -80,7 +81,9 @@ namespace Festify.Promotion.UnitTest
             var venueGuid = Guid.NewGuid();
             var venueModel = new VenueInfo
             {
-                VenueGuid = venueGuid
+                VenueGuid = venueGuid,
+                City = "Test City",
+                Name = "Test Venue"
             };
             await venueCommands.SaveVenue(venueModel);
             return venueGuid;
