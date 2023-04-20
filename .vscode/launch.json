@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Festify.Promotion/bin/Debug/net5.0/Festify.Promotion.dll",
+            "program": "${workspaceFolder}/Festify.Promotion/bin/Debug/net7.0/Festify.Promotion.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Festify.Promotion",
             "stopAtEntry": false,
