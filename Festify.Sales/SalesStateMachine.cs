@@ -9,6 +9,7 @@ namespace Festify.Sales
 
         public SalesStateMachine()
         {
+            InstanceState(x => x.CurrentState);
         }
     }
 }
