@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30711.63
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Festify.Promotion", "Festify.Promotion\Festify.Promotion.csproj", "{C857F4F0-682F-4F87-9517-4B87B81CC25B}"
 EndProject
@@ -15,7 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Festify.Promotion.Messages.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Festify.Emailer", "Festify.Emailer\Festify.Emailer.csproj", "{FCD65874-8632-4C2E-97DF-265B08DC3497}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Festify.Indexer.UnitTest", "Festify.Indexer.UnitTest\Festify.Indexer.UnitTest.csproj", "{7A930C25-82B8-4645-AE34-D174850C2F8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Festify.Indexer.UnitTest", "Festify.Indexer.UnitTest\Festify.Indexer.UnitTest.csproj", "{7A930C25-82B8-4645-AE34-D174850C2F8D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Festify.Sales", "Festify.Sales\Festify.Sales.csproj", "{EE60EAF8-B121-46E6-A9DA-44EA6EA95062}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Festify.Sales.Messages", "Festify.Sales.Messages\Festify.Sales.Messages.csproj", "{104E8680-BD85-4FE6-AD62-FCD3BD72FC42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +52,14 @@ Global
 		{7A930C25-82B8-4645-AE34-D174850C2F8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A930C25-82B8-4645-AE34-D174850C2F8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A930C25-82B8-4645-AE34-D174850C2F8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE60EAF8-B121-46E6-A9DA-44EA6EA95062}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE60EAF8-B121-46E6-A9DA-44EA6EA95062}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE60EAF8-B121-46E6-A9DA-44EA6EA95062}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE60EAF8-B121-46E6-A9DA-44EA6EA95062}.Release|Any CPU.Build.0 = Release|Any CPU
+		{104E8680-BD85-4FE6-AD62-FCD3BD72FC42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{104E8680-BD85-4FE6-AD62-FCD3BD72FC42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{104E8680-BD85-4FE6-AD62-FCD3BD72FC42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{104E8680-BD85-4FE6-AD62-FCD3BD72FC42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
