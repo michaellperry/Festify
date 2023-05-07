@@ -18,7 +18,7 @@ namespace Festify.Promotion.Contents
 
         public async Task<string> SaveContent(byte[] binary, string contentType)
         {
-            var sha512 = HashAlgorithm.Create(HashAlgorithmName.SHA512.Name);
+            var sha512 = SHA512.Create();
             var hash = Convert.ToBase64String(sha512.ComputeHash(binary));
             // avoid any slashes, plus signs or equal signs
             // the following makes this base64 string url safe
