@@ -1,3 +1,4 @@
+using Festify.Sales.Messages.Payments;
 using Festify.Sales.Messages.Purchases;
 using Festify.Sales.States;
 using MassTransit;
@@ -20,6 +21,14 @@ namespace Festify.Sales
 
             Initially(
                 When(PurchaseSubmitted)
+                    .Publish(context => new ReserveFunds
+                    {
+                        purchaseGuid = context.Message.purchaseGuid,
+                        reservation = new ReservationRepresentation
+                        {
+                            amount = context.Message.purchase.itemTotal
+                        }
+                    })
                     .TransitionTo(Started)
             );
         }
