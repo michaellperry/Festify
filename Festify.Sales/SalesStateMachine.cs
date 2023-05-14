@@ -14,7 +14,9 @@ namespace Festify.Sales
         {
             InstanceState(x => x.CurrentState);
 
-            Event(() => PurchaseSubmitted);
+            Event(() => PurchaseSubmitted, config =>
+                config.CorrelateById(context => context.Message.purchaseGuid)
+            );
 
             Initially(
                 When(PurchaseSubmitted)
