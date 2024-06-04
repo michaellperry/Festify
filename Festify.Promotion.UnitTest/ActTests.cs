@@ -113,7 +113,7 @@ namespace Festify.Promotion.UnitTest
 
         private ActInfo ActModelWith(Guid actGuid, string title, long lastModifiedTicks = 0)
         {
-            var sha512 = HashAlgorithm.Create(HashAlgorithmName.SHA512.Name);
+            var sha512 = SHA512.Create();
             var imageHash = sha512.ComputeHash(Encoding.UTF8.GetBytes(title));
 
             var actModel = new ActInfo
