@@ -11,35 +11,34 @@ public class RemoveModel : PageModel
 
     public RemoveModel(ActQueries actQueries, ActCommands actCommands)
     {
-            this.actQueries = actQueries;
-            this.actCommands = actCommands;
-        }
+        this.actQueries = actQueries;
+        this.actCommands = actCommands;
+    }
 
-    [BindProperty(SupportsGet = true)]
-    public Guid ActGuid { get; set; }
+    [BindProperty(SupportsGet = true)] public Guid ActGuid { get; set; }
 
     public string Title { get; set; }
     public string ImageHash { get; set; }
 
     public async Task<IActionResult> OnGet()
     {
-            var act = await actQueries.GetAct(ActGuid);
+        var act = await actQueries.GetAct(ActGuid);
 
-            if (act == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                Title = act.Title;
-                ImageHash = act.ImageHash;
-                return Page();
-            }
+        if (act == null)
+        {
+            return NotFound();
         }
+        else
+        {
+            Title = act.Title;
+            ImageHash = act.ImageHash;
+            return Page();
+        }
+    }
 
     public async Task<IActionResult> OnPost()
     {
-            await actCommands.RemoveAct(ActGuid);
-            return Redirect("~/");
-        }
+        await actCommands.RemoveAct(ActGuid);
+        return Redirect("~/");
+    }
 }
