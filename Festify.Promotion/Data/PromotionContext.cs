@@ -16,15 +16,6 @@ public class PromotionContext : DbContext
         this.dispatcher = dispatcher;
     }
 
-    public DbSet<Act> Act { get; set; }
-    public DbSet<ActDescription> ActDescription { get; set; }
-    public DbSet<Venue> Venue { get; set; }
-    public DbSet<VenueDescription> VenueDescription { get; set; }
-    public DbSet<VenueLocation> VenueLocation { get; set; }
-    public DbSet<VenueTimeZone> VenueTimeZone { get; set; }
-    public DbSet<Show> Show { get; set; }
-    public DbSet<Content> Content { get; set; }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Act>()
@@ -80,7 +71,7 @@ public class PromotionContext : DbContext
 
     public async Task<Act> GetOrInsertAct(Guid actGuid)
     {
-        var act = Act
+        var act = Set<Act>()
             .Include(act => act.Descriptions)
             .Where(act => act.ActGuid == actGuid)
             .SingleOrDefault();
@@ -98,7 +89,7 @@ public class PromotionContext : DbContext
 
     public async Task<Venue> GetOrInsertVenue(Guid venueGuid)
     {
-        var venue = Venue
+        var venue = Set<Venue>()
             .Include(venue => venue.Descriptions)
             .Include(venue => venue.Locations)
             .Include(venue => venue.TimeZones)
@@ -118,7 +109,7 @@ public class PromotionContext : DbContext
 
     public async Task<Show> GetOrInsertShow(Guid actGuid, Guid venueGuid, DateTimeOffset startTime)
     {
-        var show = Show
+        var show = Set<Show>()
             .Where(show =>
                 show.Act.ActGuid == actGuid &&
                 show.Venue.VenueGuid == venueGuid &&

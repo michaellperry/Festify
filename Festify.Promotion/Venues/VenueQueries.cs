@@ -15,7 +15,7 @@ public class VenueQueries
 
     public async Task<List<VenueInfo>> ListVenues()
     {
-        var result = await repository.Venue
+        var result = await repository.Set<Venue>()
             .Where(venue => !venue.Removed.Any())
             .Select(venue => new
             {
@@ -33,7 +33,7 @@ public class VenueQueries
 
     public async Task<VenueInfo> GetVenue(Guid venueGuid)
     {
-        var result = await repository.Venue
+        var result = await repository.Set<Venue>()
             .Where(venue => venue.VenueGuid == venueGuid &&
                             !venue.Removed.Any())
             .Select(venue => new

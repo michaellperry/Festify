@@ -33,7 +33,7 @@ public class VenueCommands
 
     private async Task SaveVenueDescription(VenueInfo venueInfo, Venue venue)
     {
-            var lastVenueDescription = repository.VenueDescription
+            var lastVenueDescription = repository.Set<VenueDescription>()
                 .Where(venueDescription => venueDescription.VenueId == venue.VenueId)
                 .OrderByDescending(description => description.ModifiedDate)
                 .FirstOrDefault();
@@ -64,7 +64,7 @@ public class VenueCommands
             switch ((venueInfo.Latitude, venueInfo.Longitude))
             {
                 case (float latitude, float longitude):
-                    var lastVenueLocation = repository.VenueLocation
+                    var lastVenueLocation = repository.Set<VenueLocation>()
                         .Where(venueLocation => venueLocation.VenueId == venue.VenueId)
                         .OrderByDescending(description => description.ModifiedDate)
                         .FirstOrDefault();
@@ -96,7 +96,7 @@ public class VenueCommands
     {
             if (!string.IsNullOrEmpty(venueInfo.TimeZone))
             {
-                var lastVenueTimeZone = repository.VenueTimeZone
+                var lastVenueTimeZone = repository.Set<VenueTimeZone>()
                     .Where(venueTimeZone => venueTimeZone.VenueId == venue.VenueId)
                     .OrderByDescending(description => description.ModifiedDate)
                     .FirstOrDefault();

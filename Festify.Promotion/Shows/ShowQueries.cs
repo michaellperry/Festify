@@ -16,7 +16,7 @@ public class ShowQueries
 
     public async Task<List<ShowInfo>> ListShows(Guid actGuid)
     {
-            var result = await repository.Show
+            var result = await repository.Set<Show>()
                 .Where(show =>
                     show.Act.ActGuid == actGuid &&
                     !show.Cancelled.Any())
@@ -41,7 +41,7 @@ public class ShowQueries
 
     public async Task<ShowInfo> GetShow(Guid actGuid, Guid venueGuid, DateTimeOffset startTime)
     {
-            var result = await repository.Show
+            var result = await repository.Set<Show>()
                 .Where(show =>
                     show.Act.ActGuid == actGuid &&
                     show.Venue.VenueGuid == venueGuid &&

@@ -15,7 +15,7 @@ public class ActQueries
 
     public async Task<List<ActInfo>> ListActs()
     {
-            var result = await repository.Act
+            var result = await repository.Set<Act>()
                 .Where(act => !act.Removed.Any())
                 .Select(act => new
                 {
@@ -33,7 +33,7 @@ public class ActQueries
 
     public async Task<ActInfo> GetAct(Guid actGuid)
     {
-            var result = await repository.Act
+            var result = await repository.Set<Act>()
                 .Where(act => act.ActGuid == actGuid)
                 .Select(act => new
                 {

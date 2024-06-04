@@ -14,7 +14,7 @@ public class ContentQueries
 
     public async Task<Content> GetContent(string hash)
     {
-            return await repository.Content
+            return await repository.Set<Content>()
                 .Where(c => c.Hash == hash)
                 .SingleOrDefaultAsync();
         }

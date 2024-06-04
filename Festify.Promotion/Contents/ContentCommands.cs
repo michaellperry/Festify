@@ -22,13 +22,13 @@ public class ContentCommands
             hash = hash.Replace("/", "_");
             hash = hash.Replace("+", "-");
 
-            var exists = await repository.Content
+            var exists = await repository.Set<Content>()
                 .Where(c => c.Hash == hash)
                 .AnyAsync();
 
             if (!exists)
             {
-                await repository.Content.AddAsync(new Content
+                await repository.Set<Content>().AddAsync(new Content
                 {
                     Hash = hash,
                     Binary = binary,
