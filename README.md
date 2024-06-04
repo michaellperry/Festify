@@ -22,6 +22,13 @@ Set your user secrets file like this:
 }
 ```
 
+Alternatively, you can use the dotnet CLI to set the user secret.
+Change to the Festify.Promotion folder and run this command:
+
+```bash
+dotnet user-secrets set "ConnectionStrings:PromotionContext" "Data Source=.;Database=Festify-promotion;User ID=sa;Password=Pass@word1;MultipleActiveResultSets=true"
+```
+
 ## Creating the Database
 
 Install the EF command-line tools in order to work with the application database.
