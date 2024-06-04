@@ -1,30 +1,29 @@
 using System.ComponentModel.DataAnnotations;
-using System;
 using Festify.Promotion.Messages.Venues;
 
-namespace Festify.Promotion.Venues
-{
-    public class VenueInfo
-    {
-        public Guid VenueGuid { get; set; }
-        public string Name { get; set; }
-        public string City { get; set; }
-        public long LastModifiedTicks { get; set; }
-        [Required]
-        public string TimeZone { get; set; }
-        public long TimeZoneLastModifiedTicks { get; set; }
-        [Required]
-        public float? Latitude { get; set; }
-        [Required]
-        public float? Longitude { get; set; }
-        public long LocationLastModifiedTicks { get; set; }
+namespace Festify.Promotion.Venues;
 
-        public static VenueInfo FromEntities(
-            Guid venueGuid,
-            VenueDescription venueDescription,
-            VenueLocation venueLocation = null,
-            VenueTimeZone venueTimeZone = null)
-        {
+public class VenueInfo
+{
+    public Guid VenueGuid { get; set; }
+    public string Name { get; set; }
+    public string City { get; set; }
+    public long LastModifiedTicks { get; set; }
+    [Required]
+    public string TimeZone { get; set; }
+    public long TimeZoneLastModifiedTicks { get; set; }
+    [Required]
+    public float? Latitude { get; set; }
+    [Required]
+    public float? Longitude { get; set; }
+    public long LocationLastModifiedTicks { get; set; }
+
+    public static VenueInfo FromEntities(
+        Guid venueGuid,
+        VenueDescription venueDescription,
+        VenueLocation venueLocation = null,
+        VenueTimeZone venueTimeZone = null)
+    {
             return new VenueInfo
             {
                 VenueGuid = venueGuid,
@@ -39,8 +38,8 @@ namespace Festify.Promotion.Venues
             };
         }
 
-        public VenueLocationRepresentation ToVenueLocationRepresentation()
-        {
+    public VenueLocationRepresentation ToVenueLocationRepresentation()
+    {
             switch ((Latitude, Longitude))
             {
                 case (float latitude, float longitude):
@@ -54,5 +53,4 @@ namespace Festify.Promotion.Venues
                     return null;
             }
         }
-    }
 }

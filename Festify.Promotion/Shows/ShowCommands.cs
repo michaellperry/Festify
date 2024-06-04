@@ -1,33 +1,58 @@
-﻿using Festify.Promotion.Data;
-using System;
-using System.Threading.Tasks;
+﻿using Festify.Promotion.Acts;
+using Festify.Promotion.Data;
+using Festify.Promotion.Venues;
 
-namespace Festify.Promotion.Shows
+namespace Festify.Promotion.Shows;
+
+public class ShowCommands
 {
-    public class ShowCommands
+    private PromotionContext repository;
+    private ActCommands actCommands;
+    private VenueCommands venueCommands;
+
+    public ShowCommands(PromotionContext repository, ActCommands actCommands, VenueCommands venueCommands)
     {
-        private PromotionContext repository;
+        this.repository = repository;
+        this.actCommands = actCommands;
+        this.venueCommands = venueCommands;
+    }
 
-        public ShowCommands(PromotionContext repository)
-        {
-            this.repository = repository;
-        }
+    public async Task ScheduleShow(Guid actGuid, Guid venueGuid, DateTimeOffset startTime)
+    {
+        await GetOrInsertShow(actGuid, venueGuid, startTime);
+        await repository.SaveChangesAsync();
+    }
 
-        public async Task ScheduleShow(Guid actGuid, Guid venueGuid, DateTimeOffset startTime)
+    public async Task CancelShow(Guid actGuid, Guid venueGuid, DateTimeOffset startTime)
+    {
+        var show = await GetOrInsertShow(actGuid, venueGuid, startTime);
+        await repository.AddAsync(new ShowCancelled
         {
-            await repository.GetOrInsertShow(actGuid, venueGuid, startTime);
-            await repository.SaveChangesAsync();
-        }
+            Show = show,
+            CancelledDate = DateTime.UtcNow
+        });
+        await repository.SaveChangesAsync();
+    }
 
-        public async Task CancelShow(Guid actGuid, Guid venueGuid, DateTimeOffset startTime)
+    public async Task<Show> GetOrInsertShow(Guid actGuid, Guid venueGuid, DateTimeOffset startTime)
+    {
+        var show = repository.Set<Show>()
+            .Where(show =>
+                show.Act.ActGuid == actGuid &&
+                show.Venue.VenueGuid == venueGuid &&
+                show.StartTime == startTime)
+            .SingleOrDefault();
+        if (show == null)
         {
-            var show = await repository.GetOrInsertShow(actGuid, venueGuid, startTime);
-            await repository.AddAsync(new ShowCancelled
+            show = new Show
             {
-                Show = show,
-                CancelledDate = DateTime.UtcNow
-            });
-            await repository.SaveChangesAsync();
+                Act = await actCommands.GetOrInsertAct(actGuid),
+                Venue = await venueCommands.GetOrInsertVenue(venueGuid),
+                StartTime = startTime
+            };
+            await repository.AddAsync(show);
         }
+
+        return show;
     }
 }

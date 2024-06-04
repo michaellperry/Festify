@@ -3,12 +3,12 @@ using MassTransit;
 using System;
 using System.Threading.Tasks;
 
-namespace Festify.Emailer
+namespace Festify.Emailer;
+
+class Program
 {
-    class Program
+    static async Task Main(string[] args)
     {
-        static async Task Main(string[] args)
-        {
             var bus = Bus.Factory.CreateUsingRabbitMq(busConfig =>
             {
                 busConfig.Host("rabbitmq://localhost");
@@ -26,5 +26,4 @@ namespace Festify.Emailer
 
             await bus.StopAsync();
         }
-    }
 }

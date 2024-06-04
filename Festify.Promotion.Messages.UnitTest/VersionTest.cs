@@ -4,13 +4,13 @@ using Festify.Promotion.Messages.Venues;
 using FluentAssertions;
 using Xunit;
 
-namespace Festify.Promotion.Messages.UnitTest
+namespace Festify.Promotion.Messages.UnitTest;
+
+public class VersionTest
 {
-    public class VersionTest
+    [Fact]
+    public void CanDeserializeVenue_Version1()
     {
-        [Fact]
-        public void CanDeserializeVenue_Version1()
-        {
             string venueRepresentationStrV1 = @"{
     ""venueGuid"": ""E12AEEB5-9443-4AD4-B394-EFB37B0DD67F"",
     ""description"": {
@@ -28,9 +28,9 @@ namespace Festify.Promotion.Messages.UnitTest
             venueRepresentation.location.Should().BeNull();
         }
 
-        [Fact]
-        public void CanDeserializeVenue_Version2()
-        {
+    [Fact]
+    public void CanDeserializeVenue_Version2()
+    {
             string venueRepresentationStrV1 = @"{
     ""venueGuid"": ""E12AEEB5-9443-4AD4-B394-EFB37B0DD67F"",
     ""description"": {
@@ -54,5 +54,4 @@ namespace Festify.Promotion.Messages.UnitTest
             venueRepresentation.location.longitude.Should().Be(-73.9934f);
             venueRepresentation.location.modifiedDate.Should().Be(new DateTime(2020, 11, 28, 5, 6, 39, 215, DateTimeKind.Utc));
         }
-    }
 }

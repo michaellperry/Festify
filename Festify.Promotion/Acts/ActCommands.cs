@@ -1,23 +1,20 @@
 ﻿using Festify.Promotion.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Festify.Promotion.Acts
+namespace Festify.Promotion.Acts;
+
+public class ActCommands
 {
-    public class ActCommands
-    {
-        private readonly PromotionContext repository;
+    private readonly PromotionContext repository;
 
-        public ActCommands(PromotionContext repository)
-        {
+    public ActCommands(PromotionContext repository)
+    {
             this.repository = repository;
         }
 
-        public async Task SaveAct(ActInfo actModel)
-        {
-            var act = await repository.GetOrInsertAct(actModel.ActGuid);
+    public async Task SaveAct(ActInfo actModel)
+    {
+            var act = await GetOrInsertAct(actModel.ActGuid);
             var lastActDescription = act.Descriptions
                 .OrderByDescending(description => description.ModifiedDate)
                 .FirstOrDefault();
@@ -43,9 +40,9 @@ namespace Festify.Promotion.Acts
             }
         }
 
-        public async Task RemoveAct(Guid actGuid)
-        {
-            var act = await repository.GetOrInsertAct(actGuid);
+    public async Task RemoveAct(Guid actGuid)
+    {
+            var act = await GetOrInsertAct(actGuid);
             await repository.AddAsync(new ActRemoved
             {
                 Act = act,
@@ -53,5 +50,22 @@ namespace Festify.Promotion.Acts
             });
             await repository.SaveChangesAsync();
         }
+
+    public async Task<Act> GetOrInsertAct(Guid actGuid)
+    {
+        var act = repository.Set<Act>()
+            .Include(act => act.Descriptions)
+            .Where(act => act.ActGuid == actGuid)
+            .SingleOrDefault();
+        if (act == null)
+        {
+            act = new Act
+            {
+                ActGuid = actGuid
+            };
+            await repository.AddAsync(act);
+        }
+
+        return act;
     }
 }

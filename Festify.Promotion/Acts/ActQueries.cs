@@ -1,24 +1,21 @@
 ﻿using Festify.Promotion.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Festify.Promotion.Acts
+namespace Festify.Promotion.Acts;
+
+public class ActQueries
 {
-    public class ActQueries
-    {
-        private readonly PromotionContext repository;
+    private readonly PromotionContext repository;
 
-        public ActQueries(PromotionContext repository)
-        {
+    public ActQueries(PromotionContext repository)
+    {
             this.repository = repository;
         }
 
-        public async Task<List<ActInfo>> ListActs()
-        {
-            var result = await repository.Act
+    public async Task<List<ActInfo>> ListActs()
+    {
+            var result = await repository.Set<Act>()
                 .Where(act => !act.Removed.Any())
                 .Select(act => new
                 {
@@ -34,9 +31,9 @@ namespace Festify.Promotion.Acts
                 .ToList();
         }
 
-        public async Task<ActInfo> GetAct(Guid actGuid)
-        {
-            var result = await repository.Act
+    public async Task<ActInfo> GetAct(Guid actGuid)
+    {
+            var result = await repository.Set<Act>()
                 .Where(act => act.ActGuid == actGuid)
                 .Select(act => new
                 {
@@ -50,8 +47,8 @@ namespace Festify.Promotion.Acts
             return result == null ? null : MapActModel(result.ActGuid, result.Description);
         }
 
-        private static ActInfo MapActModel(Guid actGuid, ActDescription actDescription)
-        {
+    private static ActInfo MapActModel(Guid actGuid, ActDescription actDescription)
+    {
             return new ActInfo
             {
                 ActGuid = actGuid,
@@ -60,5 +57,4 @@ namespace Festify.Promotion.Acts
                 LastModifiedTicks = actDescription?.ModifiedDate.Ticks ?? 0
             };
         }
-    }
 }

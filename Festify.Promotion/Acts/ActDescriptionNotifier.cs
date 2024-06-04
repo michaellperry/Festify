@@ -1,21 +1,20 @@
 ﻿using Festify.Promotion.Data;
 using Festify.Promotion.Messages.Acts;
 using MassTransit;
-using System.Threading.Tasks;
 
-namespace Festify.Promotion.Acts
+namespace Festify.Promotion.Acts;
+
+class ActDescriptionNotifier : INotifier<ActDescription>
 {
-    class ActDescriptionNotifier : INotifier<ActDescription>
-    {
-        private readonly IPublishEndpoint publishEndpoint;
+    private readonly IPublishEndpoint publishEndpoint;
 
-        public ActDescriptionNotifier(IPublishEndpoint publishEndpoint)
-        {
+    public ActDescriptionNotifier(IPublishEndpoint publishEndpoint)
+    {
             this.publishEndpoint = publishEndpoint;
         }
 
-        public async Task Notify(ActDescription actDescription)
-        {
+    public async Task Notify(ActDescription actDescription)
+    {
             var actDescriptionChanged = new ActDescriptionChanged
             {
                 actGuid = actDescription.Act.ActGuid,
@@ -29,5 +28,4 @@ namespace Festify.Promotion.Acts
 
             await publishEndpoint.Publish(actDescriptionChanged);
         }
-    }
 }

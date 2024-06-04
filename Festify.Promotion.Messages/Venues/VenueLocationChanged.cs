@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace Festify.Promotion.Messages.Venues
+namespace Festify.Promotion.Messages.Venues;
+
+public class VenueLocationChanged
 {
-    public class VenueLocationChanged
-    {
-        public Guid venueGuid { get; set; }
-        public VenueLocationRepresentation location { get; set; }
-    }
+    public Guid venueGuid { get; set; }
+    public VenueLocationRepresentation location { get; set; }
 }

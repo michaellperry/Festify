@@ -1,9 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿namespace Festify.Promotion.Data;
 
-namespace Festify.Promotion.Data
+public interface INotifier<T>
 {
-    public interface INotifier<T>
-    {
-        Task Notify(T entityAdded);
-    }
+    Task Notify(T entityAdded);
 }

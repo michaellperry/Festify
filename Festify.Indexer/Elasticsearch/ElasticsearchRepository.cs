@@ -7,47 +7,47 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Festify.Indexer.Elasticsearch
-{
-    class ElasticsearchRepository : IRepository
-    {
-        private readonly ElasticClient elasticClient;
+namespace Festify.Indexer.Elasticsearch;
 
-        public ElasticsearchRepository(ElasticClient elasticClient)
-        {
+class ElasticsearchRepository : IRepository
+{
+    private readonly ElasticClient elasticClient;
+
+    public ElasticsearchRepository(ElasticClient elasticClient)
+    {
             this.elasticClient = elasticClient;
         }
 
-        public async Task<VenueDocument> GetVenue(string venueGuid)
-        {
+    public async Task<VenueDocument> GetVenue(string venueGuid)
+    {
             var id = HashOfKey(new { VenueGuid = venueGuid });
             var response = await elasticClient.GetAsync<VenueDocument>(id);
 
             return response.Found ? response.Source : null;
         }
 
-        public async Task<ActDocument> GetAct(string actGuid)
-        {
+    public async Task<ActDocument> GetAct(string actGuid)
+    {
             var id = HashOfKey(new { ActGuid = actGuid });
             var response = await elasticClient.GetAsync<ActDocument>(id);
 
             return response.Found ? response.Source : null;
         }
 
-        public async Task IndexVenue(VenueDocument venue)
-        {
+    public async Task IndexVenue(VenueDocument venue)
+    {
             venue.Id = HashOfKey(new { VenueGuid = venue.VenueGuid });
             await elasticClient.IndexDocumentAsync(venue);
         }
 
-        public async Task IndexAct(ActDocument act)
-        {
+    public async Task IndexAct(ActDocument act)
+    {
             act.Id = HashOfKey(new { ActGuid = act.ActGuid });
             await elasticClient.IndexDocumentAsync(act);
         }
 
-        public async Task IndexShow(ShowDocument show)
-        {
+    public async Task IndexShow(ShowDocument show)
+    {
             show.Id = HashOfKey(new { ActGuid = show.ActGuid, StartTime = show.StartTime, VenueGuid = show.VenueGuid });
             var response = await elasticClient.IndexDocumentAsync(show);
             if (!response.IsValid)
@@ -56,8 +56,8 @@ namespace Festify.Indexer.Elasticsearch
             }
         }
 
-        public async Task UpdateShowsWithVenueDescription(string venueGuid, VenueDescription venueDescription)
-        {
+    public async Task UpdateShowsWithVenueDescription(string venueGuid, VenueDescription venueDescription)
+    {
             await elasticClient.UpdateByQueryAsync<ShowDocument>(ubq => ubq
                 .Query(q => q
                     .Match(m => m
@@ -76,8 +76,8 @@ namespace Festify.Indexer.Elasticsearch
             );
         }
 
-        public async Task UpdateShowsWithVenueLocation(string venueGuid, VenueLocation venueLocation)
-        {
+    public async Task UpdateShowsWithVenueLocation(string venueGuid, VenueLocation venueLocation)
+    {
             await elasticClient.UpdateByQueryAsync<ShowDocument>(ubq => ubq
                 .Query(q => q
                     .Match(m => m
@@ -96,8 +96,8 @@ namespace Festify.Indexer.Elasticsearch
             );
         }
 
-        public async Task UpdateShowsWithActDescription(string actGuid, ActDescription actDescription)
-        {
+    public async Task UpdateShowsWithActDescription(string actGuid, ActDescription actDescription)
+    {
             await elasticClient.UpdateByQueryAsync<ShowDocument>(ubq => ubq
                 .Query(q => q
                     .Bool(b => b
@@ -126,12 +126,11 @@ namespace Festify.Indexer.Elasticsearch
             );
         }
 
-        private string HashOfKey(object key)
-        {
+    private string HashOfKey(object key)
+    {
             string json = JsonSerializer.Serialize(key);
             var sha256 = SHA256.Create();
             var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(json));
             return Convert.ToBase64String(hash);
         }
-    }
 }

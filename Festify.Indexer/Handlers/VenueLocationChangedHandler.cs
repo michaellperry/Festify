@@ -4,21 +4,21 @@ using Festify.Promotion.Messages.Venues;
 using System;
 using System.Threading.Tasks;
 
-namespace Festify.Indexer.Handlers
-{
-    public class VenueLocationChangedHandler
-    {
-        private readonly IRepository repository;
-        private readonly VenueUpdater venueUpdater;
+namespace Festify.Indexer.Handlers;
 
-        public VenueLocationChangedHandler(IRepository repository, VenueUpdater venueUpdater)
-        {
+public class VenueLocationChangedHandler
+{
+    private readonly IRepository repository;
+    private readonly VenueUpdater venueUpdater;
+
+    public VenueLocationChangedHandler(IRepository repository, VenueUpdater venueUpdater)
+    {
             this.repository = repository;
             this.venueUpdater = venueUpdater;
         }
 
-        public async Task Handle(VenueLocationChanged venueLocationChanged)
-        {
+    public async Task Handle(VenueLocationChanged venueLocationChanged)
+    {
             Console.WriteLine($"Updating index for venue location {venueLocationChanged.location.latitude}, {venueLocationChanged.location.longitude}.");
             try
             {
@@ -39,5 +39,4 @@ namespace Festify.Indexer.Handlers
                 throw;
             }
         }
-    }
 }

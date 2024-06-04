@@ -17,9 +17,16 @@ Set your user secrets file like this:
 ```json
 {
     "ConnectionStrings": {
-        "PromotionContext": "Data Source=.;Database=Festify-promotion;User ID=sa;Password=Pass@word1;MultipleActiveResultSets=true"
+        "PromotionContext": "Data Source=.;Database=Festify-promotion;User ID=sa;Password=Pass@word1;MultipleActiveResultSets=true;TrustServerCertificate=true"
     }
 }
+```
+
+Alternatively, you can use the dotnet CLI to set the user secret.
+Change to the Festify.Promotion folder and run this command:
+
+```bash
+dotnet user-secrets set "ConnectionStrings:PromotionContext" "Data Source=.;Database=Festify-promotion;User ID=sa;Password=Pass@word1;MultipleActiveResultSets=true;TrustServerCertificate=true"
 ```
 
 ## Creating the Database

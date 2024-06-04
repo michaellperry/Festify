@@ -1,19 +1,19 @@
 ﻿using Festify.Indexer.Documents;
 using System.Threading.Tasks;
 
-namespace Festify.Indexer.Updaters
-{
-    public class ActUpdater
-    {
-        private readonly IRepository repository;
+namespace Festify.Indexer.Updaters;
 
-        public ActUpdater(IRepository repository)
-        {
+public class ActUpdater
+{
+    private readonly IRepository repository;
+
+    public ActUpdater(IRepository repository)
+    {
             this.repository = repository;
         }
 
-        public async Task<ActDocument> UpdateAndGetLatestAct(ActDocument updatedAct)
-        {
+    public async Task<ActDocument> UpdateAndGetLatestAct(ActDocument updatedAct)
+    {
             var act = await repository.GetAct(updatedAct.ActGuid);
             bool shouldUpdate = false;
             if (act == null)
@@ -39,5 +39,4 @@ namespace Festify.Indexer.Updaters
 
             return act;
         }
-    }
 }
