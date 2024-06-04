@@ -1,4 +1,5 @@
-﻿using Festify.Promotion.Data;
+﻿using Festify.Promotion.Acts;
+using Festify.Promotion.Data;
 using Festify.Promotion.Messages.Acts;
 using Festify.Promotion.Messages.Shows;
 using Festify.Promotion.Messages.Venues;

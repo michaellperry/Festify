@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
+using Festify.Promotion.Acts;
 
 namespace Festify.Promotion.Pages;
 
@@ -9,13 +10,13 @@ public class IndexModel : PageModel
 
     public IndexModel(ActQueries actQueries)
     {
-            this.actQueries = actQueries;
-        }
+        this.actQueries = actQueries;
+    }
 
     public List<ActInfo> Acts { get; set; }
 
     public async Task OnGetAsync()
     {
-            Acts = await actQueries.ListActs();
-        }
+        Acts = await actQueries.ListActs();
+    }
 }

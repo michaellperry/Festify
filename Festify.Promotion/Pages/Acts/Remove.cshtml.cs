@@ -1,3 +1,4 @@
+using Festify.Promotion.Acts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 

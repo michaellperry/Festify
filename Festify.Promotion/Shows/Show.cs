@@ -1,5 +1,6 @@
 ﻿using Festify.Promotion.Venues;
 using System.Collections.Generic;
+using Festify.Promotion.Acts;
 
 namespace Festify.Promotion.Shows;
 
