@@ -14,7 +14,7 @@ public class ActCommands
 
     public async Task SaveAct(ActInfo actModel)
     {
-            var act = await repository.GetOrInsertAct(actModel.ActGuid);
+            var act = await GetOrInsertAct(actModel.ActGuid);
             var lastActDescription = act.Descriptions
                 .OrderByDescending(description => description.ModifiedDate)
                 .FirstOrDefault();
@@ -42,7 +42,7 @@ public class ActCommands
 
     public async Task RemoveAct(Guid actGuid)
     {
-            var act = await repository.GetOrInsertAct(actGuid);
+            var act = await GetOrInsertAct(actGuid);
             await repository.AddAsync(new ActRemoved
             {
                 Act = act,
@@ -50,4 +50,22 @@ public class ActCommands
             });
             await repository.SaveChangesAsync();
         }
+
+    public async Task<Act> GetOrInsertAct(Guid actGuid)
+    {
+        var act = repository.Set<Act>()
+            .Include(act => act.Descriptions)
+            .Where(act => act.ActGuid == actGuid)
+            .SingleOrDefault();
+        if (act == null)
+        {
+            act = new Act
+            {
+                ActGuid = actGuid
+            };
+            await repository.AddAsync(act);
+        }
+
+        return act;
+    }
 }

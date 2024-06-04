@@ -16,78 +16,78 @@ public class ShowTests
     [Fact]
     public async Task ActInitiallyHasNoShows()
     {
-            var actGuid = await GivenAct();
+        var actGuid = await GivenAct();
 
-            List<ShowInfo> shows = await showQueries.ListShows(actGuid);
-            shows.Should().BeEmpty();
-        }
+        List<ShowInfo> shows = await showQueries.ListShows(actGuid);
+        shows.Should().BeEmpty();
+    }
 
     [Fact]
     public async Task WhenShowIsScheduled_ShowIsReturned()
     {
-            var actGuid = await GivenAct();
-            var venueGuid = await GivenVenue();
+        var actGuid = await GivenAct();
+        var venueGuid = await GivenVenue();
 
-            DateTimeOffset startTime = new DateTimeOffset(2021, 03, 21, 08, 00, 00, LocalOffset);
-            await showCommands.ScheduleShow(actGuid, venueGuid, startTime);
+        DateTimeOffset startTime = new DateTimeOffset(2021, 03, 21, 08, 00, 00, LocalOffset);
+        await showCommands.ScheduleShow(actGuid, venueGuid, startTime);
 
-            var shows = await showQueries.ListShows(actGuid);
-            shows.Should().Contain(show => show.StartTime == startTime);
-        }
+        var shows = await showQueries.ListShows(actGuid);
+        shows.Should().Contain(show => show.StartTime == startTime);
+    }
 
     [Fact]
     public async Task WhenShowIsScheduledTwice_OneShowIsReturned()
     {
-            var actGuid = await GivenAct();
-            var venueGuid = await GivenVenue();
+        var actGuid = await GivenAct();
+        var venueGuid = await GivenVenue();
 
-            DateTimeOffset startTime = new DateTimeOffset(2021, 03, 21, 08, 00, 00, LocalOffset);
-            await showCommands.ScheduleShow(actGuid, venueGuid, startTime);
-            await showCommands.ScheduleShow(actGuid, venueGuid, startTime);
+        DateTimeOffset startTime = new DateTimeOffset(2021, 03, 21, 08, 00, 00, LocalOffset);
+        await showCommands.ScheduleShow(actGuid, venueGuid, startTime);
+        await showCommands.ScheduleShow(actGuid, venueGuid, startTime);
 
-            var shows = await showQueries.ListShows(actGuid);
-            shows.Count.Should().Be(1);
-        }
+        var shows = await showQueries.ListShows(actGuid);
+        shows.Count.Should().Be(1);
+    }
 
     [Fact]
     public async Task WhenShowIsCanceled_ShowIsNotReturned()
     {
-            var actGuid = await GivenAct();
-            var venueGuid = await GivenVenue();
+        var actGuid = await GivenAct();
+        var venueGuid = await GivenVenue();
 
-            DateTimeOffset startTime = new DateTimeOffset(2021, 03, 21, 08, 00, 00, LocalOffset);
-            await showCommands.ScheduleShow(actGuid, venueGuid, startTime);
+        DateTimeOffset startTime = new DateTimeOffset(2021, 03, 21, 08, 00, 00, LocalOffset);
+        await showCommands.ScheduleShow(actGuid, venueGuid, startTime);
 
-            await showCommands.CancelShow(actGuid, venueGuid, startTime);
+        await showCommands.CancelShow(actGuid, venueGuid, startTime);
 
-            var shows = await showQueries.ListShows(actGuid);
-            shows.Should().BeEmpty();
-        }
+        var shows = await showQueries.ListShows(actGuid);
+        shows.Should().BeEmpty();
+    }
 
     private async Task<Guid> GivenAct()
     {
-            var actGuid = Guid.NewGuid();
-            var actModel = new ActInfo
-            {
-                ActGuid = actGuid,
-                Title = "Test Act"
-            };
-            await actCommands.SaveAct(actModel);
-            return actGuid;
-        }
+        var actGuid = Guid.NewGuid();
+        var actModel = new ActInfo
+        {
+            ActGuid = actGuid,
+            Title = "Test Act"
+        };
+        await actCommands.SaveAct(actModel);
+        return actGuid;
+    }
 
     private async Task<Guid> GivenVenue()
     {
-            var venueGuid = Guid.NewGuid();
-            var venueModel = new VenueInfo
-            {
-                VenueGuid = venueGuid,
-                City = "Test City",
-                Name = "Test Venue"
-            };
-            await venueCommands.SaveVenue(venueModel);
-            return venueGuid;
-        }
+        var venueGuid = Guid.NewGuid();
+        var venueModel = new VenueInfo
+        {
+            VenueGuid = venueGuid,
+            City = "Test City",
+            Name = "Test Venue"
+        };
+        await venueCommands.SaveVenue(venueModel);
+        return venueGuid;
+    }
 
     static TimeSpan LocalOffset = TimeZoneInfo.Local.BaseUtcOffset;
 
@@ -98,13 +98,13 @@ public class ShowTests
 
     public ShowTests()
     {
-            var repository = new PromotionContext(new DbContextOptionsBuilder<PromotionContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options, null);
+        var repository = new PromotionContext(new DbContextOptionsBuilder<PromotionContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options, null);
 
-            actCommands = new ActCommands(repository);
-            venueCommands = new VenueCommands(repository);
-            showQueries = new ShowQueries(repository);
-            showCommands = new ShowCommands(repository);
-        }
+        actCommands = new ActCommands(repository);
+        venueCommands = new VenueCommands(repository);
+        showQueries = new ShowQueries(repository);
+        showCommands = new ShowCommands(repository, actCommands, venueCommands);
+    }
 }
