@@ -1,5 +1,4 @@
-﻿using Festify.Promotion.Contents;
-using Festify.Promotion.Shows;
+﻿using Festify.Promotion.Shows;
 using Festify.Promotion.Venues;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
@@ -18,38 +17,7 @@ public class PromotionContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Act>()
-            .HasAlternateKey(act => new { act.ActGuid });
-
-        modelBuilder.Entity<ActRemoved>()
-            .HasAlternateKey(actRemoved => new { actRemoved.ActId, actRemoved.RemovedDate });
-
-        modelBuilder.Entity<ActDescription>()
-            .HasAlternateKey(actDescription => new { actDescription.ActId, actDescription.ModifiedDate });
-
-        modelBuilder.Entity<Venue>()
-            .HasAlternateKey(venue => new { venue.VenueGuid });
-
-        modelBuilder.Entity<VenueDescription>()
-            .HasAlternateKey(venueDescription => new { venueDescription.VenueId, venueDescription.ModifiedDate });
-
-        modelBuilder.Entity<VenueLocation>()
-            .HasAlternateKey(venueLocation => new { venueLocation.VenueId, venueLocation.ModifiedDate });
-
-        modelBuilder.Entity<VenueTimeZone>()
-            .HasAlternateKey(venueTimeZone => new { venueTimeZone.VenueId, venueTimeZone.ModifiedDate });
-
-        modelBuilder.Entity<Show>()
-            .HasAlternateKey(show => new { show.ActId, show.VenueId, show.StartTime });
-
-        modelBuilder.Entity<ShowCancelled>()
-            .HasAlternateKey(showCancelled => new { showCancelled.ShowId, showCancelled.CancelledDate });
-
-        modelBuilder.Entity<Content>()
-            .HasKey(content => content.Hash);
-        modelBuilder.Entity<Content>()
-            .Property(content => content.Binary)
-            .IsRequired();
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(PromotionContext).Assembly);
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
