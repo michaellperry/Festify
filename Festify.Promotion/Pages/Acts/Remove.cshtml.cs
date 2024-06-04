@@ -1,31 +1,28 @@
-using System;
-using System.Threading.Tasks;
-using Festify.Promotion.Acts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Festify.Promotion.Pages.Acts
+namespace Festify.Promotion.Pages.Acts;
+
+public class RemoveModel : PageModel
 {
-    public class RemoveModel : PageModel
+    private readonly ActQueries actQueries;
+
+    private readonly ActCommands actCommands;
+
+    public RemoveModel(ActQueries actQueries, ActCommands actCommands)
     {
-        private readonly ActQueries actQueries;
-
-        private readonly ActCommands actCommands;
-
-        public RemoveModel(ActQueries actQueries, ActCommands actCommands)
-        {
             this.actQueries = actQueries;
             this.actCommands = actCommands;
         }
 
-        [BindProperty(SupportsGet = true)]
-        public Guid ActGuid { get; set; }
+    [BindProperty(SupportsGet = true)]
+    public Guid ActGuid { get; set; }
 
-        public string Title { get; set; }
-        public string ImageHash { get; set; }
+    public string Title { get; set; }
+    public string ImageHash { get; set; }
 
-        public async Task<IActionResult> OnGet()
-        {
+    public async Task<IActionResult> OnGet()
+    {
             var act = await actQueries.GetAct(ActGuid);
 
             if (act == null)
@@ -40,10 +37,9 @@ namespace Festify.Promotion.Pages.Acts
             }
         }
 
-        public async Task<IActionResult> OnPost()
-        {
+    public async Task<IActionResult> OnPost()
+    {
             await actCommands.RemoveAct(ActGuid);
             return Redirect("~/");
         }
-    }
 }

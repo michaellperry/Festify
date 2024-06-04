@@ -9,22 +9,22 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Festify.Promotion.UnitTest
+namespace Festify.Promotion.UnitTest;
+
+public class ShowTests
 {
-    public class ShowTests
+    [Fact]
+    public async Task ActInitiallyHasNoShows()
     {
-        [Fact]
-        public async Task ActInitiallyHasNoShows()
-        {
             var actGuid = await GivenAct();
 
             List<ShowInfo> shows = await showQueries.ListShows(actGuid);
             shows.Should().BeEmpty();
         }
 
-        [Fact]
-        public async Task WhenShowIsScheduled_ShowIsReturned()
-        {
+    [Fact]
+    public async Task WhenShowIsScheduled_ShowIsReturned()
+    {
             var actGuid = await GivenAct();
             var venueGuid = await GivenVenue();
 
@@ -35,9 +35,9 @@ namespace Festify.Promotion.UnitTest
             shows.Should().Contain(show => show.StartTime == startTime);
         }
 
-        [Fact]
-        public async Task WhenShowIsScheduledTwice_OneShowIsReturned()
-        {
+    [Fact]
+    public async Task WhenShowIsScheduledTwice_OneShowIsReturned()
+    {
             var actGuid = await GivenAct();
             var venueGuid = await GivenVenue();
 
@@ -49,9 +49,9 @@ namespace Festify.Promotion.UnitTest
             shows.Count.Should().Be(1);
         }
 
-        [Fact]
-        public async Task WhenShowIsCanceled_ShowIsNotReturned()
-        {
+    [Fact]
+    public async Task WhenShowIsCanceled_ShowIsNotReturned()
+    {
             var actGuid = await GivenAct();
             var venueGuid = await GivenVenue();
 
@@ -64,8 +64,8 @@ namespace Festify.Promotion.UnitTest
             shows.Should().BeEmpty();
         }
 
-        private async Task<Guid> GivenAct()
-        {
+    private async Task<Guid> GivenAct()
+    {
             var actGuid = Guid.NewGuid();
             var actModel = new ActInfo
             {
@@ -76,8 +76,8 @@ namespace Festify.Promotion.UnitTest
             return actGuid;
         }
 
-        private async Task<Guid> GivenVenue()
-        {
+    private async Task<Guid> GivenVenue()
+    {
             var venueGuid = Guid.NewGuid();
             var venueModel = new VenueInfo
             {
@@ -89,15 +89,15 @@ namespace Festify.Promotion.UnitTest
             return venueGuid;
         }
 
-        static TimeSpan LocalOffset = TimeZoneInfo.Local.BaseUtcOffset;
+    static TimeSpan LocalOffset = TimeZoneInfo.Local.BaseUtcOffset;
 
-        private ActCommands actCommands;
-        private VenueCommands venueCommands;
-        private ShowQueries showQueries;
-        private ShowCommands showCommands;
+    private ActCommands actCommands;
+    private VenueCommands venueCommands;
+    private ShowQueries showQueries;
+    private ShowCommands showCommands;
 
-        public ShowTests()
-        {
+    public ShowTests()
+    {
             var repository = new PromotionContext(new DbContextOptionsBuilder<PromotionContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options, null);
@@ -107,5 +107,4 @@ namespace Festify.Promotion.UnitTest
             showQueries = new ShowQueries(repository);
             showCommands = new ShowCommands(repository);
         }
-    }
 }

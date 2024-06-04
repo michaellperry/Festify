@@ -4,21 +4,21 @@ using Festify.Promotion.Messages.Acts;
 using System;
 using System.Threading.Tasks;
 
-namespace Festify.Indexer.Handlers
-{
-    public class ActDescriptionChangedHandler
-    {
-        private readonly IRepository repository;
-        private readonly ActUpdater actUpdater;
+namespace Festify.Indexer.Handlers;
 
-        public ActDescriptionChangedHandler(IRepository repository, ActUpdater actUpdater)
-        {
+public class ActDescriptionChangedHandler
+{
+    private readonly IRepository repository;
+    private readonly ActUpdater actUpdater;
+
+    public ActDescriptionChangedHandler(IRepository repository, ActUpdater actUpdater)
+    {
             this.repository = repository;
             this.actUpdater = actUpdater;
         }
 
-        public async Task Handle(ActDescriptionChanged actDescriptionChanged)
-        {
+    public async Task Handle(ActDescriptionChanged actDescriptionChanged)
+    {
             Console.WriteLine($"Updating index for act {actDescriptionChanged.description.title}.");
             try
             {
@@ -38,5 +38,4 @@ namespace Festify.Indexer.Handlers
                 throw;
             }
         }
-    }
 }

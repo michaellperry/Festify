@@ -1,26 +1,24 @@
 ﻿using Festify.Promotion.Data;
-using System;
-using System.Threading.Tasks;
 
-namespace Festify.Promotion.Shows
+namespace Festify.Promotion.Shows;
+
+public class ShowCommands
 {
-    public class ShowCommands
-    {
-        private PromotionContext repository;
+    private PromotionContext repository;
 
-        public ShowCommands(PromotionContext repository)
-        {
+    public ShowCommands(PromotionContext repository)
+    {
             this.repository = repository;
         }
 
-        public async Task ScheduleShow(Guid actGuid, Guid venueGuid, DateTimeOffset startTime)
-        {
+    public async Task ScheduleShow(Guid actGuid, Guid venueGuid, DateTimeOffset startTime)
+    {
             await repository.GetOrInsertShow(actGuid, venueGuid, startTime);
             await repository.SaveChangesAsync();
         }
 
-        public async Task CancelShow(Guid actGuid, Guid venueGuid, DateTimeOffset startTime)
-        {
+    public async Task CancelShow(Guid actGuid, Guid venueGuid, DateTimeOffset startTime)
+    {
             var show = await repository.GetOrInsertShow(actGuid, venueGuid, startTime);
             await repository.AddAsync(new ShowCancelled
             {
@@ -29,5 +27,4 @@ namespace Festify.Promotion.Shows
             });
             await repository.SaveChangesAsync();
         }
-    }
 }

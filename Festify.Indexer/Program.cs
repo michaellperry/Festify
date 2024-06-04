@@ -10,12 +10,12 @@ using Nest;
 using System;
 using System.Threading.Tasks;
 
-namespace Festify.Indexer
+namespace Festify.Indexer;
+
+class Program
 {
-    class Program
+    static async Task Main(string[] args)
     {
-        static async Task Main(string[] args)
-        {
             var settings = new ConnectionSettings(new Uri("http://localhost:9200"))
                 .DefaultMappingFor<ShowDocument>(m => m
                     .IndexName("shows")
@@ -64,5 +64,4 @@ namespace Festify.Indexer
 
             await bus.StopAsync();
         }
-    }
 }

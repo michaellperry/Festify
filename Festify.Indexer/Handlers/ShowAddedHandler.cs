@@ -4,23 +4,23 @@ using Festify.Promotion.Messages.Shows;
 using System;
 using System.Threading.Tasks;
 
-namespace Festify.Indexer.Handlers
-{
-    public class ShowAddedHandler
-    {
-        private readonly IRepository repository;
-        private readonly ActUpdater actUpdater;
-        private readonly VenueUpdater venueUpdater;
+namespace Festify.Indexer.Handlers;
 
-        public ShowAddedHandler(IRepository repository, ActUpdater actUpdater, VenueUpdater venueUpdater)
-        {
+public class ShowAddedHandler
+{
+    private readonly IRepository repository;
+    private readonly ActUpdater actUpdater;
+    private readonly VenueUpdater venueUpdater;
+
+    public ShowAddedHandler(IRepository repository, ActUpdater actUpdater, VenueUpdater venueUpdater)
+    {
             this.repository = repository;
             this.actUpdater = actUpdater;
             this.venueUpdater = venueUpdater;
         }
 
-        public async Task Handle(ShowAdded showAdded)
-        {
+    public async Task Handle(ShowAdded showAdded)
+    {
             Console.WriteLine($"Indexing a show for {showAdded.act.description.title} at {showAdded.venue.description.name}.");
             try
             {
@@ -60,5 +60,4 @@ namespace Festify.Indexer.Handlers
                 throw;
             }
         }
-    }
 }

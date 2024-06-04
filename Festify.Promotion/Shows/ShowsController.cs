@@ -1,30 +1,26 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Festify.Promotion.Acts;
 using Festify.Promotion.Venues;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Festify.Promotion.Shows
-{
-    public class ShowsController : Controller
-    {
-        private readonly ShowCommands showCommands;
-        private readonly ShowQueries showQueries;
-        private readonly VenueQueries venueQueries;
-        private readonly ActQueries actQueries;
+namespace Festify.Promotion.Shows;
 
-        public ShowsController(ShowCommands showCommands, ShowQueries showQueries, VenueQueries venueQueries, ActQueries actQueries)
-        {
+public class ShowsController : Controller
+{
+    private readonly ShowCommands showCommands;
+    private readonly ShowQueries showQueries;
+    private readonly VenueQueries venueQueries;
+    private readonly ActQueries actQueries;
+
+    public ShowsController(ShowCommands showCommands, ShowQueries showQueries, VenueQueries venueQueries, ActQueries actQueries)
+    {
             this.showCommands = showCommands;
             this.showQueries = showQueries;
             this.venueQueries = venueQueries;
             this.actQueries = actQueries;
         }
 
-        public async Task<IActionResult> Create(Guid id)
-        {
+    public async Task<IActionResult> Create(Guid id)
+    {
             var act = await actQueries.GetAct(id);
             if (act == null)
             {
@@ -50,10 +46,10 @@ namespace Festify.Promotion.Shows
             return View(viewModel);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Guid id, [Bind("Venue,StartTime")] CreateShowViewModel viewModel)
-        {
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Guid id, [Bind("Venue,StartTime")] CreateShowViewModel viewModel)
+    {
             if (ModelState.IsValid)
             {
                 var venue = await venueQueries.GetVenue(viewModel.Venue);
@@ -86,9 +82,9 @@ namespace Festify.Promotion.Shows
             }
         }
 
-        [HttpGet("Shows/Delete/{act}/{venue}/{starttime}", Name = "DeleteShow")]
-        public async Task<IActionResult> Delete(Guid act, Guid venue, DateTimeOffset starttime)
-        {
+    [HttpGet("Shows/Delete/{act}/{venue}/{starttime}", Name = "DeleteShow")]
+    public async Task<IActionResult> Delete(Guid act, Guid venue, DateTimeOffset starttime)
+    {
             var show = await showQueries.GetShow(act, venue, starttime);
             if (show == null)
             {
@@ -98,11 +94,10 @@ namespace Festify.Promotion.Shows
             return View(show);
         }
 
-        [HttpPost("Shows/Delete/{act}/{venue}/{starttime}")]
-        public async Task<IActionResult> DeleteConfirmed(Guid act, Guid venue, DateTimeOffset starttime)
-        {
+    [HttpPost("Shows/Delete/{act}/{venue}/{starttime}")]
+    public async Task<IActionResult> DeleteConfirmed(Guid act, Guid venue, DateTimeOffset starttime)
+    {
             await showCommands.CancelShow(act, venue, starttime);
             return RedirectToAction("Details", "Acts", new { id = act });
         }
-    }
 }

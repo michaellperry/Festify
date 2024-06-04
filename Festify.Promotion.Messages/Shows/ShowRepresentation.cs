@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Festify.Promotion.Messages.Shows
+namespace Festify.Promotion.Messages.Shows;
+
+public class ShowRepresentation
 {
-    public class ShowRepresentation
-    {
-        public DateTimeOffset startTime { get; set; }
-    }
+    public DateTimeOffset startTime { get; set; }
 }

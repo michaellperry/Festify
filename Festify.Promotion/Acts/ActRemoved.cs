@@ -1,14 +1,11 @@
-using System;
+namespace Festify.Promotion.Acts;
 
-namespace Festify.Promotion.Acts
+public class ActRemoved
 {
-    public class ActRemoved
-    {
-        public int ActRemovedId { get; set; }
+    public int ActRemovedId { get; set; }
 
-        public int ActId { get; set; }
-        public Act Act { get; set; }
+    public int ActId { get; set; }
+    public Act Act { get; set; }
 
-        public DateTime RemovedDate { get; set; }
-    }
+    public DateTime RemovedDate { get; set; }
 }

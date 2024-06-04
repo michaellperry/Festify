@@ -9,21 +9,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Festify.Indexer.UnitTest
+namespace Festify.Indexer.UnitTest;
+
+public class HandlerTests
 {
-    public class HandlerTests
+    private readonly InMemoryRepository repository;
+    private readonly ShowAddedHandler showAddedHandler;
+    private readonly ActDescriptionChangedHandler actDescriptionChangedHandler;
+    private readonly VenueDescriptionChangedHandler venueDescriptionChangedHandler;
+    private readonly VenueLocationChangedHandler venueLocationChangedHandler;
+
+    private readonly Guid actGuid = Guid.NewGuid();
+    private readonly Guid venueGuid = Guid.NewGuid();
+
+    public HandlerTests()
     {
-        private readonly InMemoryRepository repository;
-        private readonly ShowAddedHandler showAddedHandler;
-        private readonly ActDescriptionChangedHandler actDescriptionChangedHandler;
-        private readonly VenueDescriptionChangedHandler venueDescriptionChangedHandler;
-        private readonly VenueLocationChangedHandler venueLocationChangedHandler;
-
-        private readonly Guid actGuid = Guid.NewGuid();
-        private readonly Guid venueGuid = Guid.NewGuid();
-
-        public HandlerTests()
-        {
             repository = new InMemoryRepository();
             var actUpdater = new ActUpdater(repository);
             var venueUpdater = new VenueUpdater(repository);
@@ -33,9 +33,9 @@ namespace Festify.Indexer.UnitTest
             venueLocationChangedHandler = new VenueLocationChangedHandler(repository, venueUpdater);
         }
 
-        [Fact]
-        public async Task WhenShowIsAdded_ShowIsInIndex()
-        {
+    [Fact]
+    public async Task WhenShowIsAdded_ShowIsInIndex()
+    {
             var showAdded = GivenShowAdded(
                 actTitle: "Expected act title",
                 venueName: "Expected venue name");
@@ -45,9 +45,9 @@ namespace Festify.Indexer.UnitTest
             repository.Shows.Single().VenueDescription.Name.Should().Be("Expected venue name");
         }
 
-        [Fact]
-        public async Task WhenActDescriptionIsChangedAfterShowIsAdded_ThenShowIsUpdated()
-        {
+    [Fact]
+    public async Task WhenActDescriptionIsChangedAfterShowIsAdded_ThenShowIsUpdated()
+    {
             var showAdded = GivenShowAdded(actTitle: "Original Title", actDescriptionAge: 1);
             var actDescriptionChanged = GivenActDescriptionChanged(actTitle: "Modified Title");
 
@@ -57,9 +57,9 @@ namespace Festify.Indexer.UnitTest
             repository.Shows.Single().ActDescription.Title.Should().Be("Modified Title");
         }
 
-        [Fact]
-        public async Task WhenActDescriptionChangeArrivesBeforeShowAdded_ThenShowUsesLatestDecsription()
-        {
+    [Fact]
+    public async Task WhenActDescriptionChangeArrivesBeforeShowAdded_ThenShowUsesLatestDecsription()
+    {
             var showAdded = GivenShowAdded(actTitle: "Original Title", actDescriptionAge: 1);
             var actDescriptionChanged = GivenActDescriptionChanged(actTitle: "Modified Title");
 
@@ -69,9 +69,9 @@ namespace Festify.Indexer.UnitTest
             repository.Shows.Single().ActDescription.Title.Should().Be("Modified Title");
         }
 
-        [Fact]
-        public async Task WhenVenueDescriptionIsChangedAfterShowIsAdded_ThenShowIsUpdated()
-        {
+    [Fact]
+    public async Task WhenVenueDescriptionIsChangedAfterShowIsAdded_ThenShowIsUpdated()
+    {
             var showAdded = GivenShowAdded(venueName: "Original Name", venueDescriptionAge: 1);
             var venueDescriptionChanged = GivenVenueDescriptionChanged(venueName: "Modified Name");
 
@@ -81,9 +81,9 @@ namespace Festify.Indexer.UnitTest
             repository.Shows.Single().VenueDescription.Name.Should().Be("Modified Name");
         }
 
-        [Fact]
-        public async Task WhenVenueDescriptionChangeArrivesBeforeAfterShowAdded_ThenShowUsesLatestDescription()
-        {
+    [Fact]
+    public async Task WhenVenueDescriptionChangeArrivesBeforeAfterShowAdded_ThenShowUsesLatestDescription()
+    {
             var showAdded = GivenShowAdded(venueName: "Original Name", venueDescriptionAge: 1);
             var venueDescriptionChanged = GivenVenueDescriptionChanged(venueName: "Modified Name");
 
@@ -93,9 +93,9 @@ namespace Festify.Indexer.UnitTest
             repository.Shows.Single().VenueDescription.Name.Should().Be("Modified Name");
         }
 
-        [Fact]
-        public async Task WhenVenueLocationIsChangedAfterShowIsAdded_ThenShowIsUpdated()
-        {
+    [Fact]
+    public async Task WhenVenueLocationIsChangedAfterShowIsAdded_ThenShowIsUpdated()
+    {
             var showAdded = GivenShowAdded(latitude: 0.0f, venueLocationAge: 1);
             var venueLocationChanged = GivenVenueLocationChanged(latitude: 45.0f);
 
@@ -105,9 +105,9 @@ namespace Festify.Indexer.UnitTest
             repository.Shows.Single().VenueLocation.Latitude.Should().Be(45.0f);
         }
 
-        [Fact]
-        public async Task WhenVenueLocationChangeArrivesBeforeAfterShowAdded_ThenShowUsesLatestLocation()
-        {
+    [Fact]
+    public async Task WhenVenueLocationChangeArrivesBeforeAfterShowAdded_ThenShowUsesLatestLocation()
+    {
             var showAdded = GivenShowAdded(latitude: 0.0f, venueLocationAge: 1);
             var venueLocationChanged = GivenVenueLocationChanged(latitude: 45.0f);
 
@@ -117,14 +117,14 @@ namespace Festify.Indexer.UnitTest
             repository.Shows.Single().VenueLocation.Latitude.Should().Be(45.0f);
         }
 
-        private ShowAdded GivenShowAdded(
-            string actTitle = "New Act",
-            int actDescriptionAge = 0,
-            string venueName = "New Venue",
-            int venueDescriptionAge = 0,
-            float latitude = 0.0f,
-            int venueLocationAge = 0)
-        {
+    private ShowAdded GivenShowAdded(
+        string actTitle = "New Act",
+        int actDescriptionAge = 0,
+        string venueName = "New Venue",
+        int venueDescriptionAge = 0,
+        float latitude = 0.0f,
+        int venueLocationAge = 0)
+    {
             return new ShowAdded
             {
                 act = new ActRepresentation
@@ -150,10 +150,10 @@ namespace Festify.Indexer.UnitTest
             };
         }
 
-        private VenueDescriptionChanged GivenVenueDescriptionChanged(
-            string venueName = "New Venue",
-            int venueDescriptionAge = 0)
-        {
+    private VenueDescriptionChanged GivenVenueDescriptionChanged(
+        string venueName = "New Venue",
+        int venueDescriptionAge = 0)
+    {
             return new VenueDescriptionChanged
             {
                 venueGuid = venueGuid,
@@ -161,10 +161,10 @@ namespace Festify.Indexer.UnitTest
             };
         }
 
-        private VenueLocationChanged GivenVenueLocationChanged(
-            float latitude = 0.0f,
-            int venueLocationAge = 0)
-        {
+    private VenueLocationChanged GivenVenueLocationChanged(
+        float latitude = 0.0f,
+        int venueLocationAge = 0)
+    {
             return new VenueLocationChanged
             {
                 venueGuid = venueGuid,
@@ -172,10 +172,10 @@ namespace Festify.Indexer.UnitTest
             };
         }
 
-        private ActDescriptionChanged GivenActDescriptionChanged(
-            string actTitle = "New Act",
-            int actDescriptionAge = 0)
-        {
+    private ActDescriptionChanged GivenActDescriptionChanged(
+        string actTitle = "New Act",
+        int actDescriptionAge = 0)
+    {
             return new ActDescriptionChanged
             {
                 actGuid = actGuid,
@@ -183,10 +183,10 @@ namespace Festify.Indexer.UnitTest
             };
         }
 
-        private static VenueDescriptionRepresentation GivenVenueDescription(
-            string venueName,
-            int venueDescriptionAge)
-        {
+    private static VenueDescriptionRepresentation GivenVenueDescription(
+        string venueName,
+        int venueDescriptionAge)
+    {
             return new VenueDescriptionRepresentation
             {
                 name = venueName,
@@ -195,10 +195,10 @@ namespace Festify.Indexer.UnitTest
             };
         }
 
-        private static VenueLocationRepresentation GivenVenueLocation(
-            float latitude,
-            int locationAge)
-        {
+    private static VenueLocationRepresentation GivenVenueLocation(
+        float latitude,
+        int locationAge)
+    {
             return new VenueLocationRepresentation
             {
                 latitude = latitude,
@@ -207,10 +207,10 @@ namespace Festify.Indexer.UnitTest
             };
         }
 
-        private static ActDescriptionRepresentation GivenActDescription(
-            string actTitle,
-            int actDescriptionAge)
-        {
+    private static ActDescriptionRepresentation GivenActDescription(
+        string actTitle,
+        int actDescriptionAge)
+    {
             return new ActDescriptionRepresentation
             {
                 title = actTitle,
@@ -218,5 +218,4 @@ namespace Festify.Indexer.UnitTest
                 modifiedDate = DateTime.UtcNow.AddDays(-actDescriptionAge)
             };
         }
-    }
 }

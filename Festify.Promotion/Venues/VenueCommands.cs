@@ -1,30 +1,27 @@
 using Festify.Promotion.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Festify.Promotion.Venues
+namespace Festify.Promotion.Venues;
+
+public class VenueCommands
 {
-    public class VenueCommands
-    {
-        private readonly PromotionContext repository;
+    private readonly PromotionContext repository;
 
-        public VenueCommands(PromotionContext repository)
-        {
+    public VenueCommands(PromotionContext repository)
+    {
             this.repository = repository;
         }
 
-        public async Task SaveVenue(VenueInfo venueInfo)
-        {
+    public async Task SaveVenue(VenueInfo venueInfo)
+    {
             var venue = await repository.GetOrInsertVenue(venueInfo.VenueGuid);
             await SaveVenueDescription(venueInfo, venue);
             await SaveVenueLocation(venueInfo, venue);
             await SaveVenueTimeZone(venueInfo, venue);
         }
 
-        public async Task DeleteVenue(Guid venueGuid)
-        {
+    public async Task DeleteVenue(Guid venueGuid)
+    {
             var venue = await repository.GetOrInsertVenue(venueGuid);
             await repository.AddAsync(new VenueRemoved
             {
@@ -34,8 +31,8 @@ namespace Festify.Promotion.Venues
             await repository.SaveChangesAsync();
         }
 
-        private async Task SaveVenueDescription(VenueInfo venueInfo, Venue venue)
-        {
+    private async Task SaveVenueDescription(VenueInfo venueInfo, Venue venue)
+    {
             var lastVenueDescription = repository.VenueDescription
                 .Where(venueDescription => venueDescription.VenueId == venue.VenueId)
                 .OrderByDescending(description => description.ModifiedDate)
@@ -62,8 +59,8 @@ namespace Festify.Promotion.Venues
             }
         }
 
-        private async Task SaveVenueLocation(VenueInfo venueInfo, Venue venue)
-        {
+    private async Task SaveVenueLocation(VenueInfo venueInfo, Venue venue)
+    {
             switch ((venueInfo.Latitude, venueInfo.Longitude))
             {
                 case (float latitude, float longitude):
@@ -95,8 +92,8 @@ namespace Festify.Promotion.Venues
             }
         }
 
-        private async Task SaveVenueTimeZone(VenueInfo venueInfo, Venue venue)
-        {
+    private async Task SaveVenueTimeZone(VenueInfo venueInfo, Venue venue)
+    {
             if (!string.IsNullOrEmpty(venueInfo.TimeZone))
             {
                 var lastVenueTimeZone = repository.VenueTimeZone
@@ -123,5 +120,4 @@ namespace Festify.Promotion.Venues
                 }
             }
         }
-    }
 }

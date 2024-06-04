@@ -1,24 +1,21 @@
 ﻿using Festify.Promotion.Data;
 using Festify.Promotion.Venues;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Festify.Promotion.Shows
+namespace Festify.Promotion.Shows;
+
+public class ShowQueries
 {
-    public class ShowQueries
-    {
-        private PromotionContext repository;
+    private PromotionContext repository;
 
-        public ShowQueries(PromotionContext repository)
-        {
+    public ShowQueries(PromotionContext repository)
+    {
             this.repository = repository;
         }
 
-        public async Task<List<ShowInfo>> ListShows(Guid actGuid)
-        {
+    public async Task<List<ShowInfo>> ListShows(Guid actGuid)
+    {
             var result = await repository.Show
                 .Where(show =>
                     show.Act.ActGuid == actGuid &&
@@ -42,8 +39,8 @@ namespace Festify.Promotion.Shows
                 .ToList();
         }
 
-        public async Task<ShowInfo> GetShow(Guid actGuid, Guid venueGuid, DateTimeOffset startTime)
-        {
+    public async Task<ShowInfo> GetShow(Guid actGuid, Guid venueGuid, DateTimeOffset startTime)
+    {
             var result = await repository.Show
                 .Where(show =>
                     show.Act.ActGuid == actGuid &&
@@ -66,5 +63,4 @@ namespace Festify.Promotion.Shows
                 StartTime = startTime
             };
         }
-    }
 }

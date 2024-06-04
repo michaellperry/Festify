@@ -1,23 +1,20 @@
 ﻿using Festify.Promotion.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 
-namespace Festify.Promotion.Contents
+namespace Festify.Promotion.Contents;
+
+public class ContentCommands
 {
-    public class ContentCommands
-    {
-        private readonly PromotionContext repository;
+    private readonly PromotionContext repository;
 
-        public ContentCommands(PromotionContext repository)
-        {
+    public ContentCommands(PromotionContext repository)
+    {
             this.repository = repository;
         }
 
-        public async Task<string> SaveContent(byte[] binary, string contentType)
-        {
+    public async Task<string> SaveContent(byte[] binary, string contentType)
+    {
             var sha512 = SHA512.Create();
             var hash = Convert.ToBase64String(sha512.ComputeHash(binary));
             // avoid any slashes, plus signs or equal signs
@@ -42,5 +39,4 @@ namespace Festify.Promotion.Contents
 
             return hash;
         }
-    }
 }

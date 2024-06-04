@@ -1,22 +1,20 @@
 ﻿using Festify.Promotion.Data;
 using Festify.Promotion.Messages.Venues;
 using MassTransit;
-using System;
-using System.Threading.Tasks;
 
-namespace Festify.Promotion.Venues
+namespace Festify.Promotion.Venues;
+
+class VenueDescriptionNotifier : INotifier<VenueDescription>
 {
-    class VenueDescriptionNotifier : INotifier<VenueDescription>
-    {
-        private readonly IPublishEndpoint publishEndpoint;
+    private readonly IPublishEndpoint publishEndpoint;
 
-        public VenueDescriptionNotifier(IPublishEndpoint publishEndpoint)
-        {
+    public VenueDescriptionNotifier(IPublishEndpoint publishEndpoint)
+    {
             this.publishEndpoint = publishEndpoint;
         }
 
-        public async Task Notify(VenueDescription venueDescription)
-        {
+    public async Task Notify(VenueDescription venueDescription)
+    {
             var venueDescriptionChanged = new VenueDescriptionChanged
             {
                 venueGuid = venueDescription.Venue.VenueGuid,
@@ -30,5 +28,4 @@ namespace Festify.Promotion.Venues
 
             await publishEndpoint.Publish(venueDescriptionChanged);
         }
-    }
 }

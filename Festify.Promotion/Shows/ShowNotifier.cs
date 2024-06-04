@@ -1,30 +1,27 @@
-﻿using Festify.Promotion.Acts;
-using Festify.Promotion.Data;
+﻿using Festify.Promotion.Data;
 using Festify.Promotion.Messages.Acts;
 using Festify.Promotion.Messages.Shows;
 using Festify.Promotion.Messages.Venues;
 using Festify.Promotion.Venues;
 using MassTransit;
-using System;
-using System.Threading.Tasks;
 
-namespace Festify.Promotion.Shows
+namespace Festify.Promotion.Shows;
+
+public class ShowNotifier : INotifier<Show>
 {
-    public class ShowNotifier : INotifier<Show>
-    {
-        private readonly ActQueries actQueries;
-        private readonly VenueQueries venueQueries;
-        private readonly IPublishEndpoint publishEndpoint;
+    private readonly ActQueries actQueries;
+    private readonly VenueQueries venueQueries;
+    private readonly IPublishEndpoint publishEndpoint;
 
-        public ShowNotifier(ActQueries actQueries, VenueQueries venueQueries, IPublishEndpoint publishEndpoint)
-        {
+    public ShowNotifier(ActQueries actQueries, VenueQueries venueQueries, IPublishEndpoint publishEndpoint)
+    {
             this.actQueries = actQueries;
             this.venueQueries = venueQueries;
             this.publishEndpoint = publishEndpoint;
         }
 
-        public async Task Notify(Show show)
-        {
+    public async Task Notify(Show show)
+    {
             var act = await actQueries.GetAct(show.Act.ActGuid);
             var venue = await venueQueries.GetVenue(show.Venue.VenueGuid);
             var showAdded = new ShowAdded
@@ -63,5 +60,4 @@ namespace Festify.Promotion.Shows
 
             await publishEndpoint.Publish(showAdded);
         }
-    }
 }

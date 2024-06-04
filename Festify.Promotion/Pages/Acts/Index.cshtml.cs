@@ -1,47 +1,44 @@
-using Festify.Promotion.Acts;
 using Festify.Promotion.Contents;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.IO;
-using System.Threading.Tasks;
 
-namespace Festify.Promotion.Pages.Acts
+namespace Festify.Promotion.Pages.Acts;
+
+public class IndexModel : PageModel
 {
-    public class IndexModel : PageModel
-    {
-        private readonly ActQueries actQueries;
-        private readonly ActCommands actCommands;
-        private readonly ContentQueries contentQueries;
-        private readonly ContentCommands contentCommands;
+    private readonly ActQueries actQueries;
+    private readonly ActCommands actCommands;
+    private readonly ContentQueries contentQueries;
+    private readonly ContentCommands contentCommands;
 
-        public IndexModel(ActQueries actQueries, ActCommands actCommands, ContentQueries contentQueries, ContentCommands contentCommands)
-        {
+    public IndexModel(ActQueries actQueries, ActCommands actCommands, ContentQueries contentQueries, ContentCommands contentCommands)
+    {
             this.actQueries = actQueries;
             this.actCommands = actCommands;
             this.contentQueries = contentQueries;
             this.contentCommands = contentCommands;
         }
 
-        [BindProperty(SupportsGet = true)]
-        public Guid ActGuid { get; set; }
+    [BindProperty(SupportsGet = true)]
+    public Guid ActGuid { get; set; }
 
-        public bool AddAct { get; set; }
+    public bool AddAct { get; set; }
 
-        [BindProperty]
-        public string Title { get; set; }
-        [BindProperty]
-        public IFormFile Image { get; set; }
-        [BindProperty]
-        public string ImageHash { get; set; }
-        [BindProperty]
-        public long LastModifiedTicks { get; set; }
-        public string ErrorMessage { get; set; }
+    [BindProperty]
+    public string Title { get; set; }
+    [BindProperty]
+    public IFormFile Image { get; set; }
+    [BindProperty]
+    public string ImageHash { get; set; }
+    [BindProperty]
+    public long LastModifiedTicks { get; set; }
+    public string ErrorMessage { get; set; }
 
-        public async Task OnGet()
-        {
+    public async Task OnGet()
+    {
             var act = await actQueries.GetAct(ActGuid);
 
             if (act == null)
@@ -57,8 +54,8 @@ namespace Festify.Promotion.Pages.Acts
             }
         }
 
-        public async Task<IActionResult> OnPost()
-        {
+    public async Task<IActionResult> OnPost()
+    {
             var imageHash = await GetImageHash();
 
             try
@@ -80,8 +77,8 @@ namespace Festify.Promotion.Pages.Acts
             return Redirect("~/");
         }
 
-        private async Task<string> GetImageHash()
-        {
+    private async Task<string> GetImageHash()
+    {
             if (Image != null)
             {
                 using var imageReadStream = Image.OpenReadStream();
@@ -95,5 +92,4 @@ namespace Festify.Promotion.Pages.Acts
                 return ImageHash;
             }
         }
-    }
 }

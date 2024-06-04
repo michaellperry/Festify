@@ -1,11 +1,10 @@
 using System;
 
-namespace Festify.Promotion.Messages.Venues
+namespace Festify.Promotion.Messages.Venues;
+
+public class VenueDescriptionRepresentation
 {
-    public class VenueDescriptionRepresentation
-    {
-        public string name { get; set; }
-        public string city { get; set; }
-        public DateTime modifiedDate { get; set; }
-    }
+    public string name { get; set; }
+    public string city { get; set; }
+    public DateTime modifiedDate { get; set; }
 }

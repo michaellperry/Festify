@@ -1,22 +1,19 @@
 ﻿using Festify.Promotion.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Festify.Promotion.Acts
+namespace Festify.Promotion.Acts;
+
+public class ActCommands
 {
-    public class ActCommands
-    {
-        private readonly PromotionContext repository;
+    private readonly PromotionContext repository;
 
-        public ActCommands(PromotionContext repository)
-        {
+    public ActCommands(PromotionContext repository)
+    {
             this.repository = repository;
         }
 
-        public async Task SaveAct(ActInfo actModel)
-        {
+    public async Task SaveAct(ActInfo actModel)
+    {
             var act = await repository.GetOrInsertAct(actModel.ActGuid);
             var lastActDescription = act.Descriptions
                 .OrderByDescending(description => description.ModifiedDate)
@@ -43,8 +40,8 @@ namespace Festify.Promotion.Acts
             }
         }
 
-        public async Task RemoveAct(Guid actGuid)
-        {
+    public async Task RemoveAct(Guid actGuid)
+    {
             var act = await repository.GetOrInsertAct(actGuid);
             await repository.AddAsync(new ActRemoved
             {
@@ -53,5 +50,4 @@ namespace Festify.Promotion.Acts
             });
             await repository.SaveChangesAsync();
         }
-    }
 }

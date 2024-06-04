@@ -1,15 +1,12 @@
-using System;
 using System.Collections.Generic;
-using Festify.Promotion.Acts;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Festify.Promotion.Shows
+namespace Festify.Promotion.Shows;
+
+public class CreateShowViewModel
 {
-    public class CreateShowViewModel
-    {
-        public ActInfo Act { get; set; }
-        public List<SelectListItem> Venues { get; set; }
-        public Guid Venue { get; set; }
-        public DateTime StartTime { get; set; }
-    }
+    public ActInfo Act { get; set; }
+    public List<SelectListItem> Venues { get; set; }
+    public Guid Venue { get; set; }
+    public DateTime StartTime { get; set; }
 }

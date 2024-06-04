@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace Festify.Promotion.Messages.Venues
+namespace Festify.Promotion.Messages.Venues;
+
+public class VenueTimeZoneRepresentation
 {
-    public class VenueTimeZoneRepresentation
-    {
-        public string timeZone { get; set; }
-        public DateTime modifiedDate { get; set; }
-    }
+    public string timeZone { get; set; }
+    public DateTime modifiedDate { get; set; }
 }
