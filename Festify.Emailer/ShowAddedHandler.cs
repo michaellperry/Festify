@@ -10,10 +10,14 @@ namespace Festify.Emailer
         {
         }
 
-        public Task Handle(ShowAdded message)
+        public async Task Handle(ShowAdded message)
         {
             Console.WriteLine($"Emailing about a show for {message.act.description.title} at {message.venue.description.name}.");
-            return Task.CompletedTask;
+            for (int tick = 0; tick < 45;  tick++)
+            {
+                await Task.Delay(60000);
+                Console.WriteLine("[{0:s}] Waited {1} minutes", DateTime.Now, tick+1);
+            }
         }
     }
 }
