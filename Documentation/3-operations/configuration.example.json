@@ -1,0 +1,9 @@
+{
+    "environment": "local",
+    "settings": {
+        "local": {
+            "jinagaEndpoint": "http://localhost:8000/jinaga",
+            "token": null
+        }
+    }
+}
